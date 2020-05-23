@@ -1,0 +1,114 @@
+/* Font */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap');
+
+/* Variables */
+
+$green:   #7FFF7F !default;
+$black:   #211F25 !default;
+
+/* Bootstrap */
+
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+
+/* Stylesheets */
+
+html, body, #root { height: 100%; background: #f7f7f7; font-family: 'Nunito', sans-serif; color: #211F25;}
+
+.material-icons.md-dark { color: inherit; font-size: inherit; }
+
+h1, h2, h3, h4, h5, h6{ font-weight: 600;}
+
+/* Sidebar */
+
+.wrapper { perspective: 1500px; }
+    
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: rgba(255,255,255,1);
+    color: #fff;
+    transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);
+    transform-origin: center left;
+    
+    &.active { margin-left: -250px; transform: rotateY(100deg); }
+    
+    .card{
+        background: transparent;
+        border-color: transparent;
+        
+        .card-header { 
+            background: transparent;
+            padding: 0;
+            border-color: transparent;
+            
+            &:hover{ 
+                a, i { color: $green !important; transition: .6s; }
+            }
+            
+            a{ 
+                user-select: none;
+                font-size: 16px;
+                color: rgba(0, 0, 0, .5);
+                padding: 0.5rem 1.25rem;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+
+                i{ color: rgba(0, 0, 0, .5); font-size: 24px;}
+            }
+        }
+
+        .card-body{
+            padding: 0;
+            
+            a{ 
+                user-select: none;
+                font-size: 16px;
+                color: rgba(0, 0, 0, .5);
+                padding: 0.25rem 1.25rem;
+                display: flex;
+                text-decoration: none;
+                
+                i{color: rgba(0, 0, 0, .5); font-size: 24px; }
+
+                &:hover{ 
+                    color: $green !important; 
+                    transition: .6s;
+
+                    i { color: $green !important; transition: .6s; }
+                }
+            }
+            
+        }
+    }
+}
+
+@media (max-width: 768px) {
+
+    #sidebar {
+        margin-left: -250px;
+        transform: rotateY(100deg);
+
+        &.active { margin-left: 0; transform: none; }
+    }
+
+}
+
+/* Navbar */
+
+.navbar {
+    background: $green;
+    padding: .5rem 1.25rem;
+
+    .navbar-text{
+        color: $black !important;
+        padding-top: 0;
+        padding-bottom: .3rem;
+    }
+    .navbar-brand{ 
+        padding: 0;
+        span { cursor: pointer; user-select: none;}
+        i{ color: $black !important;}
+    }
+}

@@ -21,7 +21,7 @@ export default class Sidebar extends Component {
                             <Accordion className="w-100">
                                 <SidebarNavLink link="/home" icon="home" name="Home" />
                                 <SidebarNavLink link="/equipamentos" icon="build" name="Equipamentos" />
-                                {/* <SidebarNavLink link="/dashboard" icon="dashboard" name="People View" /> */}
+                                <SidebarNavLink link="/dashboard" icon="dashboard" name="Dashboards" />
                                 {/* <SidebarNavDropdown icon="dashboard" name="People View" >
                                     <SidebarNavDropdownLink link="#" name="Clientes" />
                                     <SidebarNavDropdownLink link="#" name="Usuários" />

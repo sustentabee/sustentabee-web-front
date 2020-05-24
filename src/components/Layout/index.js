@@ -37,8 +37,8 @@ export default class Layout extends Component {
                                     <Navbar.Brand>
                                         <span onClick={this.toggleSidebar}><MaterialIcon icon={"menu"} /></span>
                                     </Navbar.Brand>
-                                    <Navbar.Text className="mb-1">
-                                        <small>{company}</small>
+                                    <Navbar.Text className="ml-auto">
+                                        <span>{company}</span>
                                     </Navbar.Text>
                                     <Navbar.Brand className="ml-auto">
                                         <span onClick={this.logout}><MaterialIcon icon={"power_settings_new"} /></span>
@@ -46,7 +46,7 @@ export default class Layout extends Component {
                                 </Navbar>
                             </Container>
                         </div>
-                        <div className="w-100 mx-auto overflow-auto">
+                        <div className="w-100 mx-auto overflow-auto px-4">
                             {this.props.children}
                             <Footer />
                         </div>

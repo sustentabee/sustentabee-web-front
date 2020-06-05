@@ -253,7 +253,7 @@ export default class Home extends Component {
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
                                                 <div className="d-flex align-items-start justify-content-center">
-                                                    <Link to={"/equipamentos"} className="small">Ver equipamento</Link>
+                                                    <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -275,7 +275,7 @@ export default class Home extends Component {
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
                                                 <div className="d-flex align-items-start justify-content-center">
-                                                    <Link to={"/equipamentos"} className="small">Ver equipamento</Link>
+                                                    <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -297,7 +297,7 @@ export default class Home extends Component {
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
                                                 <div className="d-flex align-items-start justify-content-center">
-                                                    <Link to={"/equipamentos"} className="small">Ver equipamento</Link>
+                                                    <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
                                                 </div>
                                             </Col>
                                         </Row>

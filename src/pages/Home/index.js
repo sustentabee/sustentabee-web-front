@@ -83,7 +83,7 @@ export default class Home extends Component {
                                             options={options}
                                         />
                                         <br />
-                                        <Link to={"#"} className="small mt-2">Ir para Dashboards</Link>
+                                        <Link to={"/dashboard"} className="small mt-2">Ir para Dashboards</Link>
                                     </Card.Body>
                                 </Card>
                             </Col>

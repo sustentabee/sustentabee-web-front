@@ -5,6 +5,7 @@ import SelectCompany from './pages/SelectCompany';
 import Home from "./pages/Home";
 import Equipment from "./pages/Equipment";
 import EquipmentDashboard from "./pages/EquipmentDashboard";
+import Dashboard from "./pages/Dashboard";
 
 const Routes = () => (
     <BrowserRouter>
@@ -14,6 +15,7 @@ const Routes = () => (
             <Route exact path="/home" component={Home} />
             <Route exact path="/equipamentos" component={Equipment} />
             <Route exact path="/dashboard-equipamento" component={EquipmentDashboard} />
+            <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>
     </BrowserRouter>

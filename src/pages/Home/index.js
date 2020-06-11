@@ -8,6 +8,8 @@ import IconFreezer from "../../assets/img/freezer.svg";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Link } from 'react-router-dom';
+import data from "../../config/data";
+import Alert from '../../components/Alert';
 
 export default class Home extends Component {
 
@@ -98,132 +100,9 @@ export default class Home extends Component {
                                 </Row>
                                 <Row className="home-card">
                                     <Col xs={12} className="">
-                                        <Card className="border-0 rounded shadow-sm">
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col xs={12} lg={7} className="d-flex align-items-center">
-                                                        <div className="d-flex h-100 mr-3 rounded" style={{ width: "6px", background: "#A00" }}></div>
-                                                        <div>
-                                                            <span className="d-flex">Alto consumo de energia</span>
-                                                            <span className="d-flex small text-muted">Electrolux - FE22 - 173L</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center">
-                                                        <div className="text-center">
-                                                            <span className="d-flex small text-muted">21/05/2020 </span>
-                                                            <span className="d-flex small text-muted">19:35</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={1} className="d-flex align-items-center justify-content-end">
-                                                        <Link to={"/equipamentos"} className="small">Detalhes</Link>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                        <Card className="border-0 rounded shadow-sm mt-3">
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col xs={12} lg={7} className="d-flex align-items-center">
-                                                        <div className="d-flex h-100 mr-3 rounded" style={{ width: "6px", background: "#ff8c00" }}></div>
-                                                        <div>
-                                                            <span className="d-flex">Aberto mais de 5 minutos</span>
-                                                            <span className="d-flex small text-muted">Electrolux - FE22 - 173L</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center">
-                                                        <div className="text-center">
-                                                            <span className="d-flex small text-muted">21/05/2020 </span>
-                                                            <span className="d-flex small text-muted">19:35</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={1} className="d-flex align-items-center justify-content-end">
-                                                        <Link to={"/equipamentos"} className="small">Detalhes</Link>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                        <Card className="border-0 rounded shadow-sm mt-3">
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col xs={12} lg={7} className="d-flex align-items-center">
-                                                        <div className="d-flex h-100 mr-3 rounded" style={{ width: "6px", background: "#0A0" }}></div>
-                                                        <div>
-                                                            <span className="d-flex">Economia de 15% de energia</span>
-                                                            <span className="d-flex small text-muted">Electrolux - FE22 - 173L</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center">
-                                                        <div className="text-center">
-                                                            <span className="d-flex small text-muted">21/05/2020 </span>
-                                                            <span className="d-flex small text-muted">19:35</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={1} className="d-flex align-items-center justify-content-end">
-                                                        <Link to={"/equipamentos"} className="small">Detalhes</Link>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                        <Card className="border-0 rounded shadow-sm mt-3">
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col xs={12} lg={7} className="d-flex align-items-center">
-                                                        <div className="d-flex h-100 mr-3 rounded" style={{ width: "6px", background: "#A00" }}></div>
-                                                        <div>
-                                                            <span className="d-flex">Alto consumo de energia</span>
-                                                            <span className="d-flex small text-muted">Electrolux - FE22 - 173L</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center">
-                                                        <div className="text-center">
-                                                            <span className="d-flex small text-muted">21/05/2020 </span>
-                                                            <span className="d-flex small text-muted">19:35</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={1} className="d-flex align-items-center justify-content-end">
-                                                        <Link to={"/equipamentos"} className="small">Detalhes</Link>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                        <Card className="border-0 rounded shadow-sm mt-3">
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col xs={12} lg={7} className="d-flex align-items-center">
-                                                        <div className="d-flex h-100 mr-3 rounded" style={{ width: "6px", background: "#A00" }}></div>
-                                                        <div>
-                                                            <span className="d-flex">Alto consumo de energia</span>
-                                                            <span className="d-flex small text-muted">Electrolux - FE22 - 173L</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center">
-                                                        <div className="text-center">
-                                                            <span className="d-flex small text-muted">21/05/2020 </span>
-                                                            <span className="d-flex small text-muted">19:35</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={1} className="d-flex align-items-center justify-content-end">
-                                                        <Link to={"/equipamentos"} className="small">Detalhes</Link>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                        <Card className="border-0 rounded shadow-sm mt-3">
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col xs={12} lg={9} className="d-flex align-items-center">
-                                                        <div className="d-flex h-100 mr-3 rounded" style={{ width: "6px", background: "#A00" }}></div>
-                                                        <div>
-                                                            <span className="d-flex">Alto consumo de energia</span>
-                                                            <span className="d-flex small text-muted">Electrolux - FE22 - 173L</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
-                                                        <Link to={"/equipamentos"} className="small">Detalhes</Link>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
+                                        {data.alerts.map((alert, index) => (
+                                            <Alert alert={alert} key={index} />
+                                        ))}
                                     </Col>
                                 </Row>
                             </Col>

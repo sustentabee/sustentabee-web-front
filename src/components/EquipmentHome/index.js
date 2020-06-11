@@ -28,7 +28,7 @@ export default class EquipmentHome extends Component {
                 </Col>
                 <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
                     <div className="d-flex align-items-start justify-content-center">
-                        <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
+                        <Link to={`equipamento/${equipment.nome}/dashboard`} className="small">Ver equipamento</Link>
                     </div>
                 </Col>
             </Row>

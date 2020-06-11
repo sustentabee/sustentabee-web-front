@@ -27,7 +27,7 @@ export default class Alert extends Component {
                             </div>
                         </Col>
                         <Col xs={12} lg={1} className="d-flex align-items-center justify-content-end">
-                            <Link to={"/equipamentos"} className="small">Detalhes</Link>
+                            <Link to={`equipamento/${alert.equipment}/dashboard`} className="small">Detalhes</Link>
                         </Col>
                     </Row>
                 </Card.Body>

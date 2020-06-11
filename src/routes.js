@@ -14,7 +14,7 @@ const Routes = () => (
             <Route exact path="/selecionar-empresa" component={SelectCompany} />
             <Route exact path="/home" component={Home} />
             <Route exact path="/equipamentos" component={Equipment} />
-            <Route exact path="/dashboard-equipamento" component={EquipmentDashboard} />
+            <Route exact path="/equipamento/:nome/dashboard" component={EquipmentDashboard} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>

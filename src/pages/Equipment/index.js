@@ -101,7 +101,7 @@ export default class Equipment extends Component {
                                                 {formatDate(equipment.dataAquisicao)}
                                             </Col>
                                             <Col xs={12} lg={4} className="d-flex align-items-center justify-content-end">
-                                                <BtnAction name={"Ver equipamento"} icon={"remove_red_eye"} action={() => window.location.href = "/dashboard-equipamento"} />
+                                                <BtnAction name={"Ver equipamento"} icon={"remove_red_eye"} action={() => window.location.href = "/equipamento/" + equipment.nome + "/dashboard"} />
                                                 <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(i, equipment)} />
                                                 <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(i)} />
                                             </Col>

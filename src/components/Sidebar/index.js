@@ -29,7 +29,7 @@ export default class Sidebar extends Component {
                                 </SidebarNavDropdown>
                                 <SidebarNavLink link="#" icon="history" name="Medições" />
                                 <SidebarNavLink link="/equipamentos" icon="sensor_window" name="Equipamentos" />
-                                <SidebarNavLink link="#" icon="handyman" name="Manutenções" />
+                                <SidebarNavLink link="/manutencoes" icon="handyman" name="Manutenções" />
                             </Accordion>
                         </div>
                     </div>

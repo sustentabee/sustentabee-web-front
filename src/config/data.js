@@ -35,8 +35,38 @@ const data = {
     measurement: [
 
     ],
-    maintenance: [
-
+    maintenances: [
+        { equipment: "Geladeira1", modelo: "SB01", marca: "Eletrolux", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira2", modelo: "SB01", marca: "Eletrolux", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira3", modelo: "SB77", marca: "Consul", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira4", modelo: "SB77", marca: "Consul", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira5", modelo: "SB02", marca: "Eletrolux", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira6", modelo: "SB02", marca: "Eletrolux", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira7", modelo: "SB17", marca: "Consul", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira8", modelo: "SB13", marca: "Consul", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-04-15", detalhes: "Vazamento de água" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-05-15", detalhes: "Porta com mau contato" },
+        { equipment: "Geladeira1", modelo: "SB01", marca: "Eletrolux", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira2", modelo: "SB01", marca: "Eletrolux", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira3", modelo: "SB77", marca: "Consul", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira4", modelo: "SB77", marca: "Consul", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira5", modelo: "SB02", marca: "Eletrolux", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira6", modelo: "SB02", marca: "Eletrolux", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira7", modelo: "SB17", marca: "Consul", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira8", modelo: "SB13", marca: "Consul", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-06-30", detalhes: "Manutenção de 6 meses" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-07-15", detalhes: "Vazamento de água" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-08-15", detalhes: "Porta com mau contato" },
+        { equipment: "Geladeira1", modelo: "SB01", marca: "Eletrolux", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira2", modelo: "SB01", marca: "Eletrolux", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira3", modelo: "SB77", marca: "Consul", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira4", modelo: "SB77", marca: "Consul", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira5", modelo: "SB02", marca: "Eletrolux", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira6", modelo: "SB02", marca: "Eletrolux", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira7", modelo: "SB17", marca: "Consul", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira8", modelo: "SB13", marca: "Consul", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
     ],
 }
 

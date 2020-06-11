@@ -35,7 +35,9 @@ const data = {
     measurement: [
 
     ],
+    maintenance: [
 
+    ],
 }
 
 export default data;

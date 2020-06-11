@@ -71,10 +71,10 @@ export default class Home extends Component {
                     <Container fluid>
                         <Row>
                             <Col xs={12} lg={6}>
-                                <Widget icon={IconFreezer} name={"Total de Equipamentos"} value={"70"} />
+                                <Widget icon={IconFreezer} name={"Total de Equipamentos"} value={`${data.equipments.length}`} />
                             </Col>
                             <Col xs={12} lg={6}>
-                                <Widget icon={IconPowerBattery} name={"Consumo no Mês"} value={"5000 kWh"} />
+                                <Widget icon={IconPowerBattery} name={"Consumo no Mês"} value={`${Math.floor(Math.random() * 100000)} kWh`} />
                             </Col>
                         </Row>
                         <Row className="mb-4">

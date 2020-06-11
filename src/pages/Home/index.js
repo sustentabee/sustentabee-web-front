@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import Widget from "../../components/Widget";
@@ -10,6 +10,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { Link } from 'react-router-dom';
 import data from "../../config/data";
 import Alert from '../../components/Alert';
+import EquipmentHome from '../../components/EquipmentHome';
 
 export default class Home extends Component {
 
@@ -113,79 +114,18 @@ export default class Home extends Component {
                             </Col>
                             <Col xs={12}>
                                 <Card className="border-0 rounded shadow-sm">
-                                    <Card.Body>
-                                        <Row className="border-bottom border-grey py-3">
-                                            <Col xs={3} lg={1} className="d-flex align-items-center justify-content-start">
-                                                <Image src={IconFreezer} width="50" />
-                                            </Col>
-                                            <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2">
-                                                <div className="d-flex align-items-start justify-content-center flex-column">
-                                                    <h6 className="mb-0">Freezer Vertical</h6>
-                                                    <p className="mb-0 small">Consumo no Mês: 80 kWh</p>
-                                                </div>
-                                            </Col>
-                                            <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2 offset-3 offset-lg-0">
-                                                <div className="d-flex align-items-start justify-content-center flex-column">
-                                                    <h6 className="mb-0">Electrolux</h6>
-                                                    <p className="mb-0 small">FE22 - 173L</p>
-                                                </div>
-                                            </Col>
-                                            <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
-                                                <div className="d-flex align-items-start justify-content-center">
-                                                    <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row className="border-bottom border-grey py-3">
-                                            <Col xs={3} lg={1} className="d-flex align-items-center justify-content-start">
-                                                <Image src={IconFreezer} width="50" />
-                                            </Col>
-                                            <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2">
-                                                <div className="d-flex align-items-start justify-content-center flex-column">
-                                                    <h6 className="mb-0">Freezer Vertical</h6>
-                                                    <p className="mb-0 small">Consumo no Mês: 80 kWh</p>
-                                                </div>
-                                            </Col>
-                                            <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2 offset-3 offset-lg-0">
-                                                <div className="d-flex align-items-start justify-content-center flex-column">
-                                                    <h6 className="mb-0">Electrolux</h6>
-                                                    <p className="mb-0 small">FE22 - 173L</p>
-                                                </div>
-                                            </Col>
-                                            <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
-                                                <div className="d-flex align-items-start justify-content-center">
-                                                    <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row className="border-bottom border-grey py-3">
-                                            <Col xs={3} lg={1} className="d-flex align-items-center justify-content-start">
-                                                <Image src={IconFreezer} width="50" />
-                                            </Col>
-                                            <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2">
-                                                <div className="d-flex align-items-start justify-content-center flex-column">
-                                                    <h6 className="mb-0">Freezer Vertical</h6>
-                                                    <p className="mb-0 small">Consumo no Mês: 80 kWh</p>
-                                                </div>
-                                            </Col>
-                                            <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2 offset-3 offset-lg-0">
-                                                <div className="d-flex align-items-start justify-content-center flex-column">
-                                                    <h6 className="mb-0">Electrolux</h6>
-                                                    <p className="mb-0 small">FE22 - 173L</p>
-                                                </div>
-                                            </Col>
-                                            <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
-                                                <div className="d-flex align-items-start justify-content-center">
-                                                    <Link to={"/dashboard-equipamento"} className="small">Ver equipamento</Link>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row className="pt-3">
+                                    <Card.Body className="home-card">
+                                        {data.equipments.map((equipment, index) => (
+                                            <EquipmentHome equipment={equipment} key={index} />
+                                        ))}
+                                    </Card.Body>
+                                    <Card.Footer className="border-0 bg-white">
+                                        <Row className="py-3">
                                             <Col xs={12} className="d-flex align-items-center justify-content-end">
                                                 <Link to={"/equipamentos"} className="small">Ver todos</Link>
                                             </Col>
                                         </Row>
-                                    </Card.Body>
+                                    </Card.Footer>
                                 </Card>
                             </Col>
                         </Row>

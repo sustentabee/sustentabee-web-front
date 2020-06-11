@@ -1,5 +1,5 @@
 const data = {
-    equipment: [
+    equipments: [
         { nome: "Geladeira 1", dM: "DM001", serial: "001", modelo: "SB01", marca: "Eletrolux", dataAquisicao: "2019-01-01", potencia: 350, tensao: 220, consumoEstim: 500 },
         { nome: "Geladeira 2", dM: "DM002", serial: "002", modelo: "SB01", marca: "Eletrolux", dataAquisicao: "2019-01-01", potencia: 350, tensao: 220, consumoEstim: 500 },
         { nome: "Geladeira 3", dM: "DM003", serial: "003", modelo: "SB77", marca: "Consul", dataAquisicao: "2019-01-01", potencia: 300, tensao: 220, consumoEstim: 500 },

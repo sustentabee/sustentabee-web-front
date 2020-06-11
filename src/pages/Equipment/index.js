@@ -4,44 +4,16 @@ import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import BtnAction from '../../components/BtnAction';
 import CardList from '../../components/CardList';
+import CardListHeader from '../../components/CardListHeader';
 import MaterialIcon from "material-icons-react";
+import data from "../../config/data";
+import { formatDate } from "../../config/utils";
 
 export default class Equipment extends Component {
 
     state = {
         show: false,
-        equipments: [
-            {
-                dm: "Dispositivo de Medição",
-                serial: "Serial",
-                modelo: "modelo",
-                marca: "Consul",
-                data_aquisicao: "1977-10-13",
-                potencia: "10",
-                tensao: "220",
-                consumo: "500",
-            },
-            {
-                dm: "Dispositivo de Medição",
-                serial: "Serial",
-                modelo: "modelo",
-                marca: "Electrolux",
-                data_aquisicao: "1977-10-13",
-                potencia: "10",
-                tensao: "220",
-                consumo: "500",
-            },
-            {
-                dm: "Dispositivo de Medição",
-                serial: "Serial",
-                modelo: "modelo",
-                marca: "Electrolux",
-                data_aquisicao: "1977-10-13",
-                potencia: "10",
-                tensao: "220",
-                consumo: "500",
-            }
-        ],
+        equipments: data.equipments,
         equipment: [],
         index: -1
     }
@@ -59,17 +31,17 @@ export default class Equipment extends Component {
         event.preventDefault();
         let { equipments, equipment, index } = this.state;
         if (index === -1) {
-            equipment.marca = "Electrolux";
             equipments.push(equipment);
             this.setState({ equipments });
         } else {
             for (let i = 0; i < equipments.length; i++) {
                 if (i === index) {
-                    equipments[i].dm = equipment.dm;
+                    equipments[i].nome = equipment.nome;
+                    equipments[i].dM = equipment.dM;
                     equipments[i].serial = equipment.serial;
                     equipments[i].modelo = equipment.modelo;
                     equipments[i].marca = equipment.marca;
-                    equipments[i].data_aquisicao = equipment.data_aquisicao;
+                    equipments[i].dataAquisicao = equipment.dataAquisicao;
                     equipments[i].potencia = equipment.potencia;
                     equipments[i].tensao = equipment.tensao;
                     equipments[i].consumo = equipment.consumo;
@@ -80,11 +52,10 @@ export default class Equipment extends Component {
         this.handleClose();
     }
 
-    delete = () => {
-        let { equipments, index } = this.state;
+    delete = (index) => {
+        let { equipments } = this.state;
         equipments.splice(index, 1)
         this.setState({ equipments });
-        this.handleClose();
     }
 
     render() {
@@ -101,25 +72,38 @@ export default class Equipment extends Component {
                     <Container fluid>
                         <Row>
                             <Col xs={12}>
-                                {equipments.map((equipment, index) => (
-                                    <CardList key={index}>
+                                <CardListHeader>
+                                    <Row>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Nome</Col>
+                                        <Col xs={12} lg={1} className="font-weight-bold d-flex align-items-center">Disp. de Medição</Col>
+                                        <Col xs={12} lg={1} className="font-weight-bold d-flex align-items-center">Serial</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Marca/Modelo</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Data de Aquisição</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center"></Col>
+                                    </Row>
+                                </CardListHeader>
+                                {equipments.map((equipment, i) => (
+                                    <CardList key={i}>
                                         <Row>
-                                            <Col xs={12} lg={3} className="d-flex align-items-start justify-content-center flex-column">
-                                                <h6 className="mb-0">{equipment.dm}</h6>
-                                                <p className="mb-0 text-muted">{equipment.serial}</p>
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                                {equipment.nome}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-start justify-content-center flex-column">
-                                                <h6 className="mb-0">{equipment.marca}</h6>
-                                                <p className="mb-0 text-muted">{equipment.modelo}</p>
+                                            <Col xs={12} lg={1} className="d-flex align-items-center small">
+                                                {equipment.dM}
                                             </Col>
-                                            <Col xs={12} lg={3} className="d-flex align-items-start justify-content-center flex-column">
-                                                <h6 className="mb-0">Data de Aquisição</h6>
-                                                <p className="mb-0 text-muted">{new Date(equipment.data_aquisicao).toLocaleDateString()}</p>
+                                            <Col xs={12} lg={1} className="d-flex align-items-center small">
+                                                {equipment.serial}
+                                            </Col>
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                                {equipment.marca} - {equipment.modelo}
+                                            </Col>
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                                {formatDate(equipment.dataAquisicao)}
                                             </Col>
                                             <Col xs={12} lg={4} className="d-flex align-items-center justify-content-end">
                                                 <BtnAction name={"Ver equipamento"} icon={"remove_red_eye"} action={() => window.location.href = "/dashboard-equipamento"} />
-                                                <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(index, equipment)} />
-                                                <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(index, equipment)} />
+                                                <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(i, equipment)} />
+                                                <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(i)} />
                                             </Col>
                                         </Row>
                                     </CardList>
@@ -130,7 +114,7 @@ export default class Equipment extends Component {
                 </Layout>
                 <Modal show={show} size={"lg"} onHide={this.handleClose}>
                     <Modal.Header className="border-0">
-                        <Modal.Title style={{ color: "rgba(0,0,0,.5)" }}>{(equipment._id !== undefined) ? "Editar" : "Adicionar"} equipamento</Modal.Title>
+                        <Modal.Title style={{ color: "rgba(0,0,0,.5)" }}>{(index !== -1) ? "Editar" : "Adicionar"} equipamento</Modal.Title>
                         <Button variant="muted" onClick={this.handleClose}><MaterialIcon icon="close" /></Button>
                     </Modal.Header>
                     <Modal.Body>
@@ -138,8 +122,12 @@ export default class Equipment extends Component {
                             <Form onSubmit={this.save}>
                                 <Row>
                                     <Col xs={12} lg={6} className="mb-3">
+                                        <Form.Label>Nome</Form.Label>
+                                        <Form.Control type="text" name="nome" value={equipment.nome} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Dispositivo de Medição</Form.Label>
-                                        <Form.Control type="text" name="dm" value={equipment.dm} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="text" name="dM" value={equipment.dM} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Serial</Form.Label>
@@ -150,8 +138,12 @@ export default class Equipment extends Component {
                                         <Form.Control type="text" name="modelo" value={equipment.modelo} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
+                                        <Form.Label>Marca</Form.Label>
+                                        <Form.Control type="text" name="marca" value={equipment.marca} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Data de Aquisição</Form.Label>
-                                        <Form.Control type="date" name="data_aquisicao" value={equipment.data_aquisicao} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="date" name="dataAquisicao" value={equipment.dataAquisicao} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Potência</Form.Label>
@@ -163,7 +155,7 @@ export default class Equipment extends Component {
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Consumo Estimado</Form.Label>
-                                        <Form.Control type="number" name="consumo" value={equipment.consumo} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="number" name="consumoEstim" value={equipment.consumoEstim} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={12} className="mb-3">
                                         <Button type="submit" variant="success" className="d-flex ml-auto">{(index !== -1) ? "Salvar" : "Adicionar"}</Button>

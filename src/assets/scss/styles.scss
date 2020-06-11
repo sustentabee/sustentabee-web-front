@@ -15,9 +15,9 @@ $black:   #211F25 !default;
 
 html, body, #root { height: 100%; background: #f7f7f7; font-family: 'Nunito', sans-serif; color: #211F25;}
 
-.material-icons.md-dark { color: inherit; font-size: inherit; }
-
 h1, h2, h3, h4, h5, h6{ font-weight: 600;}
+
+.material-icons{font-size: inherit !important; color: inherit !important;}
 
 /* Sidebar */
 
@@ -76,7 +76,7 @@ h1, h2, h3, h4, h5, h6{ font-weight: 600;}
                     color: $green !important; 
                     transition: .6s;
 
-                    i { color: $green !important; transition: .6s; }
+                    i { color: transparent !important; transition: .6s; }
                 }
             }
             

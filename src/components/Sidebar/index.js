@@ -22,10 +22,7 @@ export default class Sidebar extends Component {
                             <Accordion className="w-100">
                                 <SidebarNavLink link="/home" icon="home" name="Home" />
                                 <SidebarNavDropdown icon="bar_chart" name="Dashboards" eventKey={0}>
-                                    <SidebarNavDropdownLink link={"/dashboard"} name="Dashboard" />
-                                    <SidebarNavDropdownLink link={"/dashboard"} name="Dashboard" />
-                                    <SidebarNavDropdownLink link={"/dashboard"} name="Dashboard" />
-                                    <SidebarNavDropdownLink link={"/dashboard"} name="Dashboard" />
+                                    <SidebarNavDropdownLink link={"/dashboard-alerta"} name="Alertas" />
                                 </SidebarNavDropdown>
                                 <SidebarNavLink link="/medicoes" icon="history" name="Medições" />
                                 <SidebarNavLink link="/equipamentos" icon="sensor_window" name="Equipamentos" />

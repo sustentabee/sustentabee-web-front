@@ -8,6 +8,7 @@ import EquipmentDashboard from "./pages/EquipmentDashboard";
 import Dashboard from "./pages/Dashboard";
 import Maintenance from "./pages/Maintenance";
 import Measurement from "./pages/Measurement";
+import DashboardAlert from "./pages/_dashboards/DashboardAlert";
 
 const Routes = () => (
     <BrowserRouter>
@@ -20,6 +21,7 @@ const Routes = () => (
             <Route exact path="/manutencoes" component={Maintenance} />
             <Route exact path="/medicoes" component={Measurement} />
             <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/dashboard-alerta" component={DashboardAlert} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>
     </BrowserRouter>

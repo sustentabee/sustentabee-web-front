@@ -10,6 +10,7 @@ import Maintenance from "./pages/Maintenance";
 import Measurement from "./pages/Measurement";
 import DashboardAlert from "./pages/_dashboards/DashboardAlert";
 import DashboardMaintenance from "./pages/_dashboards/DashboardMaintenance";
+import DashboardMeasurement from "./pages/_dashboards/DashboardMeasurement";
 
 const Routes = () => (
     <BrowserRouter>
@@ -24,6 +25,7 @@ const Routes = () => (
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/dashboard-alerta" component={DashboardAlert} />
             <Route exact path="/dashboard-manutencao" component={DashboardMaintenance} />
+            <Route exact path="/dashboard-medicao" component={DashboardMeasurement} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>
     </BrowserRouter>

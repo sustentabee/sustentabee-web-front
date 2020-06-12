@@ -18,3 +18,12 @@ export const calcularConsumo = (tempo, potencia, dias) => {
     const kWh = (potencia * horas * dias) / 1000;
     return (isNaN(kWh)) ? 0 : kWh;
 }
+
+export const calcularHora = (tempo) => {
+    const arr = String(tempo).split(":");
+    const segundosEmMinutos = parseFloat((parseFloat(arr[2]) / 60));
+    const segundosEmMinutosEmHoras = parseFloat(segundosEmMinutos / 60);
+    const minutosEmHoras = (parseFloat(arr[1]) / 60);
+    const horas = segundosEmMinutosEmHoras + minutosEmHoras + parseFloat(arr[0]);
+    return horas;
+}

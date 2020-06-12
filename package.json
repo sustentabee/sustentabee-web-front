@@ -10,6 +10,7 @@
         "highcharts": "^8.1.0",
         "highcharts-react-official": "^3.0.0",
         "material-icons-react": "^1.0.4",
+        "moment": "^2.26.0",
         "node-sass": "^4.14.1",
         "popper.js": "^1.16.1",
         "react": "^16.13.1",

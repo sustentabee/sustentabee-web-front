@@ -32,8 +32,16 @@ const data = {
         { alert: "Alto consumo de energia", equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2020-06-10", hora: "16:44", variant: "danger" },
         { alert: "Alto consumo de energia", equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2020-06-11", hora: "16:44", variant: "danger" },
     ],
-    measurement: [
-
+    measurements: [
+        { equipment: "Geladeira1", modelo: "SB01", marca: "Eletrolux", potencia: 350, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:00:00", measurementEnd: "2020-01-01T10:00:00" },
+        { equipment: "Geladeira2", modelo: "SB01", marca: "Eletrolux", potencia: 350, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:04:00", measurementEnd: "2020-01-01T00:05:30" },
+        { equipment: "Geladeira3", modelo: "SB77", marca: "Consul", potencia: 300, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:05:00", measurementEnd: "2020-01-01T00:05:30" },
+        { equipment: "Geladeira4", modelo: "SB77", marca: "Consul", potencia: 300, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:06:00", measurementEnd: "2020-01-01T01:05:30" },
+        { equipment: "Geladeira5", modelo: "SB02", marca: "Eletrolux", potencia: 300, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:07:00", measurementEnd: "2020-01-01T00:08:40" },
+        { equipment: "Geladeira6", modelo: "SB02", marca: "Eletrolux", potencia: 300, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:08:00", measurementEnd: "2020-01-01T00:09:30" },
+        { equipment: "Geladeira7", modelo: "SB17", marca: "Consul", potencia: 400, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:09:00", measurementEnd: "2020-01-01T00:15:10" },
+        { equipment: "Geladeira8", modelo: "SB13", marca: "Consul", potencia: 400, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:10:00", measurementEnd: "2020-01-01T00:25:30" },
+        { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", potencia: 250, data: "2019-03-31", bandeira: "Verde", measurementStart: "2020-01-01T00:11:00", measurementEnd: "2020-01-01T01:00:00" },
     ],
     maintenances: [
         { equipment: "Geladeira1", modelo: "SB01", marca: "Eletrolux", data: "2019-03-31", detalhes: "Manutenção de 3 meses" },

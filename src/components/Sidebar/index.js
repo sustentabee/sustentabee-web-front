@@ -27,7 +27,7 @@ export default class Sidebar extends Component {
                                     <SidebarNavDropdownLink link={"/dashboard"} name="Dashboard" />
                                     <SidebarNavDropdownLink link={"/dashboard"} name="Dashboard" />
                                 </SidebarNavDropdown>
-                                <SidebarNavLink link="#" icon="history" name="Medições" />
+                                <SidebarNavLink link="/medicoes" icon="history" name="Medições" />
                                 <SidebarNavLink link="/equipamentos" icon="sensor_window" name="Equipamentos" />
                                 <SidebarNavLink link="/manutencoes" icon="handyman" name="Manutenções" />
                             </Accordion>

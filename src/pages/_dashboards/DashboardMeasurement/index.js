@@ -168,7 +168,19 @@ export default class DashboardMeasurement extends Component {
                 { name: "Total de Medições", data: totalMeasurements },
                 { name: "Total de Horas", data: totalHours },
                 { name: "Consumo em kWh", data: totalConsumo },
-            ]
+            ],
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        chart: {
+                            height: '800px'
+                        },
+                    }
+                }]
+            }
         }
 
         return (

@@ -37,22 +37,22 @@ export default class Measurement extends Component {
                                     <CardList key={i}>
                                         <Row>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {measurement.equipment}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{measurement.equipment}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {measurement.marca} - {measurement.modelo}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{measurement.marca} - {measurement.modelo}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {formatDate(measurement.data)}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{formatDate(measurement.data)}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {measurement.bandeira}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Bandeira:</span>{measurement.bandeira}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {calcularTempo(measurement.measurementStart, measurement.measurementEnd)}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Tempo:</span>{calcularTempo(measurement.measurementStart, measurement.measurementEnd)}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {calcularConsumo(calcularTempo(measurement.measurementStart, measurement.measurementEnd), measurement.potencia, 1).toFixed(4)} kWh
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Consumo:</span>{calcularConsumo(calcularTempo(measurement.measurementStart, measurement.measurementEnd), measurement.potencia, 1).toFixed(4)} kWh
                                             </Col>
                                         </Row>
                                     </CardList>

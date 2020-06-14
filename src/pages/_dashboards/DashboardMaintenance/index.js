@@ -146,7 +146,20 @@ export default class DashboardMaintenance extends Component {
             },
             series: [
                 { name: "Total", data: totalMaintenances },
-            ]
+            ],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        chart: {
+                            height: '800px'
+                        },
+                    }
+                }]
+            }
         }
 
         return (

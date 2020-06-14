@@ -86,21 +86,21 @@ export default class Equipment extends Component {
                                     <CardList key={i}>
                                         <Row>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {equipment.nome}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Nome:</span>{equipment.nome}
                                             </Col>
                                             <Col xs={12} lg={1} className="d-flex align-items-center small">
-                                                {equipment.dM}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Dispositivo de medição:</span>{equipment.dM}
                                             </Col>
                                             <Col xs={12} lg={1} className="d-flex align-items-center small">
-                                                {equipment.serial}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Serial:</span>{equipment.serial}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {equipment.marca} - {equipment.modelo}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{equipment.marca} - {equipment.modelo}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {formatDate(equipment.dataAquisicao)}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data de Aquisição:</span>{formatDate(equipment.dataAquisicao)}
                                             </Col>
-                                            <Col xs={12} lg={4} className="d-flex align-items-center justify-content-end">
+                                            <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center justify-content-lg-end pt-3 pt-lg-0">
                                                 <BtnAction name={"Ver equipamento"} icon={"remove_red_eye"} action={() => window.location.href = "/equipamento/" + equipment.nome + "/dashboard"} />
                                                 <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(i, equipment)} />
                                                 <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(i)} />

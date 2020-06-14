@@ -86,18 +86,18 @@ export default class Maintenance extends Component {
                                     <CardList key={i}>
                                         <Row>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {maintenance.equipment}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{maintenance.equipment}
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center small">
-                                                {maintenance.marca} - {maintenance.modelo}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{maintenance.marca} - {maintenance.modelo}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {formatDate(maintenance.data)}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{formatDate(maintenance.data)}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                {maintenance.detalhes}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Detalhes:</span>{maintenance.detalhes}
                                             </Col>
-                                            <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
+                                            <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end pt-3 pt-lg-0">
                                                 <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(i, maintenance)} />
                                                 <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(i)} />
                                             </Col>

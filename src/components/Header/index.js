@@ -16,10 +16,10 @@ export default class Header extends Component {
                             <Card style={{ background: 'transparent', border: 0 }}>
                                 <Card.Body style={{ padding: "1.25rem 0" }}>
                                     <Row>
-                                        <Col xs={6} className="d-flex align-items-center justify-content-start">
+                                        <Col xs={6} lg={6} className="d-flex align-items-center justify-content-start">
                                             <h3 className="m-0" style={{ color: 'rgba(0, 0, 0, .5)' }}>{this.props.title}</h3>
                                         </Col>
-                                        <Col xs={6} className="d-flex align-items-center justify-content-end">
+                                        <Col xs={6} lg={6} className="d-flex align-items-center justify-content-end">
                                             {this.props.children}
                                         </Col>
                                     </Row>

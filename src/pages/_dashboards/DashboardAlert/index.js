@@ -156,7 +156,21 @@ export default class DashboardAlert extends Component {
                 { name: "Bom", data: success },
                 { name: "Atenção", data: warning },
                 { name: "Urgente", data: danger }
-            ]
+            ],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        chart: {
+                            height: '800px'
+                        },
+                    }
+                }]
+            }
+
         }
 
         return (

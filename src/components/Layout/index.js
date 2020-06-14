@@ -46,7 +46,7 @@ export default class Layout extends Component {
                                 </Navbar>
                             </Container>
                         </div>
-                        <div className="w-100 mx-auto overflow-auto px-4">
+                        <div className="w-100 mx-auto overflow-auto px-lg-4">
                             {this.props.children}
                             <Footer />
                         </div>

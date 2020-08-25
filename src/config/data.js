@@ -76,6 +76,28 @@ const data = {
         { equipment: "Geladeira8", modelo: "SB13", marca: "Consul", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
         { equipment: "Geladeira9", modelo: "SB22", marca: "Brastemp", data: "2019-09-30", detalhes: "Manutenção de 9 meses" },
     ],
+    user: [
+        { name: "Paulo", email: "paulo@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Germano", email: "germano@americanas.com", company: "Americanas", permission: "Gerente" },
+        { name: "Gustavo", email: "gustavo@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Erick", email: "erick@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Leandro", email: "leandro@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Thiago", email: "thigo@americanas.com", company: "Americanas", permission: "Gerente" },
+        { name: "Julia", email: "julia@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Carol", email: "carol@americanas.com", company: "Americanas", permission: "Gerente" },
+        { name: "Sandra", email: "sandra@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Cristiano", email: "cristiano@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Andre", email: "andre@americanas.com", company: "Americanas", permission: "Gerente" },
+        { name: "Giovana", email: "giovana@americanas.com", company: "Americanas", permission: "Supervisor" },
+        { name: "Maria", email: "maria@americanas.com", company: "Americanas", permission: "Gerente" },
+    ],
+    company: [
+        { name: "Americanas", adress: "Rua Luz Marina 1395", phoneNumber: "996845729", CNPJ: "49.695.881/0001-00" },
+        { name: "Burger King", adress: "Rua Padre Champagnat 34", phoneNumber: "987344678", CNPJ: "87.375.018/0001-56" },
+        { name: "Walmart", adress: "Rua Joaquim Gomes da Silva 1986", phoneNumber: "338873488", CNPJ: "13.621.472/0001-03" },
+        { name: "Festval", adress: "Rua Niterói 964", phoneNumber: "398439287", CNPJ: "80.321.896/0001-40" },
+        { name: "Madero", adress: "Rua Otávio Torres Pereira 1022", phoneNumber: "987542231", CNPJ: "45.703.270/0001-05" },
+    ]
 }
 
 export default data;

@@ -6,11 +6,9 @@ export default class Lotties extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { isStopped: false, isPaused: false };
     }
 
     render() {
-        const { width = "100%" } = this.props;
 
         const defaultOptions = {
             loop: true,
@@ -23,19 +21,17 @@ export default class Lotties extends Component {
 
         const styles = {
             svg: {
-                width: width,
-                heigth: "auto",
-                // transform: "translate3d(0px, 0px, 0px) scale(1.5)"
+                width: 200,
+                heigth: 200,
             }
         }
 
         return (
             <Lottie
                 options={defaultOptions}
-                style={styles.svg}
-                isStopped={false}
-                isPaused={false} />
+                height={200}
+                width={200}
+                isClickToPauseDisabled={true} />
         );
-
     }
 }

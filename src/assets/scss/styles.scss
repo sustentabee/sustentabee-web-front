@@ -4,8 +4,10 @@
 
 /* Variables */
 
-$green:   #7FFF7F !default;
-$black:   #211F25 !default;
+$green: #7FFF7F !default;
+$black: #211F25 !default;
+
+$theme-colors: ("primary": #7FFF7F, "dark": #211F25);
 
 /* Bootstrap */
 
@@ -13,40 +15,70 @@ $black:   #211F25 !default;
 
 /* Stylesheets */
 
-html, body, #root { height: 100%; background: #f7f7f7; font-family: 'Nunito', sans-serif; color: #211F25;}
+html,
+body,
+#root {
+    height: 100%;
+    background: #f7f7f7;
+    font-family: 'Nunito', sans-serif;
+    color: #211F25;
+}
 
-h1, h2, h3, h4, h5, h6{ font-weight: 600;}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+}
 
-.material-icons{font-size: inherit !important; color: inherit !important;}
+.material-icons {
+    font-size: inherit !important;
+    color: inherit !important;
+}
+
+input.form-control {
+    border-radius: 0;
+}
 
 /* Sidebar */
 
-.wrapper { perspective: 1500px; }
-    
+.wrapper {
+    perspective: 1500px;
+}
+
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: rgba(255,255,255,1);
+    background: rgba(255, 255, 255, 1);
     color: #fff;
     transition: all 0.6s ease-in-out;
     transform-origin: center left;
-    
-    &.active { margin-left: -250px; }
-    
-    .card{
+
+    &.active {
+        margin-left: -250px;
+    }
+
+    .card {
         background: transparent;
         border-color: transparent;
-        
-        .card-header { 
+
+        .card-header {
             background: transparent;
             padding: 0;
             border-color: transparent;
-            
-            &:hover{ 
-                a, i { color: $green !important; transition: .6s; }
+
+            &:hover {
+
+                a,
+                i {
+                    color: $green !important;
+                    transition: .6s;
+                }
             }
-            
-            a{ 
+
+            a {
                 user-select: none;
                 font-size: 16px;
                 color: rgba(0, 0, 0, .5);
@@ -55,31 +87,40 @@ h1, h2, h3, h4, h5, h6{ font-weight: 600;}
                 align-items: center;
                 text-decoration: none;
 
-                i{ color: rgba(0, 0, 0, .5); font-size: 24px;}
+                i {
+                    color: rgba(0, 0, 0, .5);
+                    font-size: 24px;
+                }
             }
         }
 
-        .card-body{
+        .card-body {
             padding: 0;
-            
-            a{ 
+
+            a {
                 user-select: none;
                 font-size: 16px;
                 color: rgba(0, 0, 0, .5);
                 padding: 0.25rem 1.25rem;
                 display: flex;
                 text-decoration: none;
-                
-                i{color: rgba(0, 0, 0, .5); font-size: 24px; }
 
-                &:hover{ 
-                    color: $green !important; 
+                i {
+                    color: rgba(0, 0, 0, .5);
+                    font-size: 24px;
+                }
+
+                &:hover {
+                    color: $green !important;
                     transition: .6s;
 
-                    i { color: transparent !important; transition: .6s; }
+                    i {
+                        color: transparent !important;
+                        transition: .6s;
+                    }
                 }
             }
-            
+
         }
     }
 }
@@ -89,7 +130,10 @@ h1, h2, h3, h4, h5, h6{ font-weight: 600;}
     #sidebar {
         margin-left: -250px;
 
-        &.active { margin-left: 0; transform: none; }
+        &.active {
+            margin-left: 0;
+            transform: none;
+        }
     }
 
 }
@@ -100,15 +144,23 @@ h1, h2, h3, h4, h5, h6{ font-weight: 600;}
     background: $green;
     padding: .5rem 1.25rem;
 
-    .navbar-text{
+    .navbar-text {
         color: $black !important;
         padding-top: 0;
         padding-bottom: .3rem;
     }
-    .navbar-brand{ 
+
+    .navbar-brand {
         padding: 0;
-        span { cursor: pointer; user-select: none;}
-        i{ color: $black !important;}
+
+        span {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        i {
+            color: $black !important;
+        }
     }
 }
 

@@ -3,17 +3,13 @@ import Sidebar from '../Sidebar';
 import { Container, Navbar } from 'react-bootstrap';
 import MaterialIcon from "material-icons-react";
 import Footer from '../Footer';
+import { decodeToken } from '../../config/auth';
 
 export default class Layout extends Component {
 
     state = {
         sidebar: false,
-        company: '',
-    }
-
-    componentDidMount() {
-        const company = localStorage.getItem("company");
-        this.setState({ company });
+        user: decodeToken(),
     }
 
     toggleSidebar = () => this.setState({ sidebar: !this.state.sidebar });
@@ -24,7 +20,8 @@ export default class Layout extends Component {
     };
 
     render() {
-        const { sidebar, company } = this.state;
+        const { sidebar } = this.state;
+        const { user } = this.state.user;
 
         return (
             <>
@@ -38,7 +35,7 @@ export default class Layout extends Component {
                                         <span onClick={this.toggleSidebar}><MaterialIcon icon={"menu"} /></span>
                                     </Navbar.Brand>
                                     <Navbar.Text className="ml-auto">
-                                        <span>{company}</span>
+                                        <span>{user.company_name}</span>
                                     </Navbar.Text>
                                     <Navbar.Brand className="ml-auto">
                                         <span onClick={this.logout}><MaterialIcon icon={"power_settings_new"} /></span>

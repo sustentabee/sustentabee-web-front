@@ -21,12 +21,12 @@ export default class Sidebar extends Component {
                         <div className="d-flex align-items-center justify-content-center px-2 pt-5">
                             <Accordion className="w-100">
                                 <SidebarNavLink link="/home" icon="home" name="Home" />
-                                <SidebarNavDropdown icon="bar_chart" name="Dashboards" eventKey={0}>
+                                {/* <SidebarNavDropdown icon="bar_chart" name="Dashboards" eventKey={1}>
                                     <SidebarNavDropdownLink link={"/dashboard-alerta"} name="Alertas" />
                                     <SidebarNavDropdownLink link={"/dashboard-manutencao"} name="Manutenções" />
                                     <SidebarNavDropdownLink link={"/dashboard-medicao"} name="Medições" />
-                                </SidebarNavDropdown>
-                                <SidebarNavLink link="/medicoes" icon="history" name="Medições" />
+                                </SidebarNavDropdown> */}
+                                {/* <SidebarNavLink link="/medicoes" icon="history" name="Medições" /> */}
                                 <SidebarNavLink link="/equipamentos" icon="sensor_window" name="Equipamentos" />
                                 <SidebarNavLink link="/manutencoes" icon="handyman" name="Manutenções" />
                             </Accordion>
@@ -52,30 +52,30 @@ function SidebarNavLink(props) {
     );
 }
 
-function SidebarNavDropdown(props) {
-    return (
-        <Card className="mb-2 rounded">
-            <Card.Header>
-                <Accordion.Toggle as={Link} to={"#"} eventKey={props.eventKey} className="d-flex align-items-center justify-content-between">
-                    <span style={{ fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon={props.icon} /></span>
-                    <span className="ml-3 mt-1">{props.name}</span>
-                    <span className="ml-auto" style={{ fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon={"keyboard_arrow_down"} /></span>
-                </Accordion.Toggle>
-            </Card.Header>
-            <Accordion.Collapse eventKey={props.eventKey}>
-                <Card.Body>
-                    {props.children}
-                </Card.Body>
-            </Accordion.Collapse>
-        </Card>
-    );
-}
+// function SidebarNavDropdown(props) {
+//     return (
+//         <Card className="mb-2 rounded">
+//             <Card.Header>
+//                 <Accordion.Toggle as={Link} to={"#"} eventKey={props.eventKey} className="d-flex align-items-center justify-content-between">
+//                     <span style={{ fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon={props.icon} /></span>
+//                     <span className="ml-3 mt-1">{props.name}</span>
+//                     <span className="ml-auto" style={{ fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon={"keyboard_arrow_down"} /></span>
+//                 </Accordion.Toggle>
+//             </Card.Header>
+//             <Accordion.Collapse eventKey={props.eventKey}>
+//                 <Card.Body>
+//                     {props.children}
+//                 </Card.Body>
+//             </Accordion.Collapse>
+//         </Card>
+//     );
+// }
 
-function SidebarNavDropdownLink(props) {
-    return (
-        <Link to={props.link} className="d-flex align-items-center">
-            <span style={{ color: "transparent", fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon="chevron_right" /></span>
-            <span className="ml-3 mt-1">{props.name}</span>
-        </Link>
-    );
-}
+// function SidebarNavDropdownLink(props) {
+//     return (
+//         <Link to={props.link} className="d-flex align-items-center">
+//             <span style={{ color: "transparent", fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon="chevron_right" /></span>
+//             <span className="ml-3 mt-1">{props.name}</span>
+//         </Link>
+//     );
+// }

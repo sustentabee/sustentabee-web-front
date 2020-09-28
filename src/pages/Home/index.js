@@ -1,75 +1,68 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, /* Row, Col, Card */ } from "react-bootstrap";
+import { decodeToken } from '../../config/auth';
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
-import Widget from "../../components/Widget";
-import IconPowerBattery from "../../assets/img/power_battery.svg";
-import IconFreezer from "../../assets/img/freezer.svg";
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import { Link } from 'react-router-dom';
-import data from "../../config/data";
-import Alert from '../../components/Alert';
-import EquipmentHome from '../../components/EquipmentHome';
+// import Widget from "../../components/Widget";
+// import IconPowerBattery from "../../assets/img/power_battery.svg";
+// import IconFreezer from "../../assets/img/freezer.svg";
+// import Highcharts from 'highcharts';
+// import HighchartsReact from 'highcharts-react-official';
+// import { Link } from 'react-router-dom';
+// import data from "../../config/data";
+// import Alert from '../../components/Alert';
+// import EquipmentHome from '../../components/EquipmentHome';
 
 export default class Home extends Component {
 
     state = {
-        email: '',
-        company: '',
-        user: ''
-    }
+        user: decodeToken(),
 
-    componentDidMount() {
-        const email = localStorage.getItem("email");
-        const user = email.split("@")[0];
-        const company = localStorage.getItem("company");
-        this.setState({ email, company, user });
     }
 
     render() {
-        const { user } = this.state;
+        const { user } = this.state.user;
 
-        const options = {
-            colors: ['#7FFF7F', '#333'],
-            chart: { type: 'line' },
-            title: {
-                text: 'Consumo x Economia de Energia'
-            },
-            xAxis: { categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], crosshair: true },
-            yAxis: [{ className: 'highcharts-color-0', min: 0, title: { text: '' } }],
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b> {point.y} kWh</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [
-                {
-                    name: "Consumo de Energia",
-                    data: [90, 80, 70, 60, 50, 60, 70, 60, 50, 50, 30, 10]
-                },
-                {
-                    name: "Economia de Energia",
-                    data: [0, 10, 20, 30, 40, 30, 20, 30, 40, 40, 50, 60]
-                }
-            ]
-        }
+        // const options = {
+        //     colors: ['#7FFF7F', '#333'],
+        //     chart: { type: 'line' },
+        //     title: {
+        //         text: 'Consumo x Economia de Energia'
+        //     },
+        //     xAxis: { categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], crosshair: true },
+        //     yAxis: [{ className: 'highcharts-color-0', min: 0, title: { text: '' } }],
+        //     tooltip: {
+        //         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        //         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+        //             '<td style="padding:0"><b> {point.y} kWh</b></td></tr>',
+        //         footerFormat: '</table>',
+        //         shared: true,
+        //         useHTML: true
+        //     },
+        //     plotOptions: {
+        //         column: {
+        //             pointPadding: 0.2,
+        //             borderWidth: 0
+        //         }
+        //     },
+        //     series: [
+        //         {
+        //             name: "Consumo de Energia",
+        //             data: [90, 80, 70, 60, 50, 60, 70, 60, 50, 50, 30, 10]
+        //         },
+        //         {
+        //             name: "Economia de Energia",
+        //             data: [0, 10, 20, 30, 40, 30, 20, 30, 40, 40, 50, 60]
+        //         }
+        //     ]
+        // }
 
         return (
             <>
                 <Layout>
-                    <Header title={`Bem vindo, ${user}`} />
+                    <Header title={`Bem vindo, ${user.name}`} />
                     <Container fluid>
-                        <Row>
+                        {/* <Row>
                             <Col xs={12} lg={6}>
                                 <Widget icon={IconFreezer} name={"Total de Equipamentos"} value={`${data.equipments.length}`} />
                             </Col>
@@ -128,7 +121,7 @@ export default class Home extends Component {
                                     </Card.Footer>
                                 </Card>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </Container>
                 </Layout>
             </>

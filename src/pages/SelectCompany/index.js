@@ -31,8 +31,14 @@ export default class SelectCompany extends Component {
     setCompany = async (event) => {
         event.preventDefault();
         const { company = [] } = this.state;
-        console.log(company);
-        // login com a empresa setada no token
+        await api.post("/select-company", { company_id: company })
+            .then((res) => {
+                localStorage.setItem("TOKEN_KEY", res.data.token);
+                window.location.href = "/home";
+            })
+            .catch(() => {
+
+            })
     }
 
     render() {

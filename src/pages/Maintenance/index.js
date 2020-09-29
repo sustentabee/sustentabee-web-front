@@ -6,20 +6,34 @@ import BtnAction from '../../components/BtnAction';
 import CardList from '../../components/CardList';
 import CardListHeader from '../../components/CardListHeader';
 import MaterialIcon from "material-icons-react";
-import data from "../../config/data";
-import { formatDate } from "../../config/utils";
+import api from "../../config/api";
 
 export default class Maintenance extends Component {
 
     state = {
         show: false,
-        maintenances: data.maintenances,
+        equipments: [],
+        maintenances: [],
         maintenance: [],
-        index: -1
+    }
+
+    componentDidMount() {
+        this.getMaintenances();
+        this.getEquipments();
+    }
+
+    getEquipments = async () => {
+        const response = await api.get("/equipment");
+        this.setState({ equipments: response.data });
+    }
+
+    getMaintenances = async () => {
+        const response = await api.get("/maintenance");
+        this.setState({ maintenances: response.data });
     }
 
     handleClose = () => this.setState({ show: false });
-    handleShow = (index = -1, maintenance = {}) => this.setState({ show: true, index, maintenance });
+    handleShow = (maintenance = {}) => this.setState({ show: true, maintenance });
 
     myChangeHandler = (event) => {
         let nam = event.target.name;
@@ -27,48 +41,47 @@ export default class Maintenance extends Component {
         this.setState({ maintenance: { ...this.state.maintenance, [nam]: val } });
     }
 
-    save = event => {
+    save = async event => {
         event.preventDefault();
-        let { maintenances, maintenance, index } = this.state;
-        const { equipments = [] } = data;
-        const [equipment] = equipments.filter(e => e.nome === maintenance.equipment);
-        maintenance.marca = equipment.marca;
-        maintenance.modelo = equipment.modelo;
+        const { maintenance } = this.state;
+        if (maintenance.id !== undefined) {
+            await api.put(`/maintenance/${maintenance.id}`, maintenance)
+                .then(() => {
+                    this.getMaintenances();
+                })
+                .catch(() => {
 
-        if (index === -1) {
-            maintenances.push(maintenance);
-            this.setState({ maintenances });
+                })
         } else {
-            for (let i = 0; i < maintenances.length; i++) {
-                if (i === index) {
-                    maintenances[i].equipment = maintenance.equipment;
-                    maintenances[i].data = maintenance.data;
-                    maintenances[i].modelo = maintenance.modelo;
-                    maintenances[i].marca = maintenance.marca;
-                    maintenances[i].detalhes = maintenance.detalhes;
-                }
-            }
-            this.setState({ maintenances });
+            await api.post("/maintenance", maintenance)
+                .then(() => {
+                    this.getMaintenances();
+                })
+                .catch(() => {
+
+                })
         }
         this.handleClose();
     }
 
-    delete = (index) => {
-        let { maintenances } = this.state;
-        maintenances.splice(index, 1)
-        this.setState({ maintenances });
+    delete = async maintenance => {
+        await api.delete(`/maintenance/${maintenance.id}`, maintenance)
+            .then(() => {
+                this.getMaintenances();
+            })
+            .catch(() => {
+
+            })
     }
 
     render() {
-        const { maintenances, maintenance, show, index } = this.state;
+        const { maintenances, maintenance, show, equipments } = this.state;
 
         return (
             <>
                 <Layout>
                     <Header title={"Manutenções"}>
-                        <Button variant="success" onClick={() => this.handleShow(-1, {})}>
-                            Adicionar
-                        </Button>
+                        <Button variant="success" onClick={() => this.handleShow()}>Adicionar</Button>
                     </Header>
                     <Container fluid>
                         <Row>
@@ -82,24 +95,24 @@ export default class Maintenance extends Component {
                                         <Col xs={12} lg={3} className="font-weight-bold d-flex align-items-center"></Col>
                                     </Row>
                                 </CardListHeader>
-                                {maintenances.map((maintenance, i) => (
-                                    <CardList key={i}>
+                                {maintenances.map((maintenance, index) => (
+                                    <CardList key={index}>
                                         <Row>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{maintenance.equipment}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{maintenance.name}
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{maintenance.marca} - {maintenance.modelo}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{maintenance.brand} - {maintenance.model}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{formatDate(maintenance.data)}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{new Date(maintenance.date).toLocaleDateString()}
                                             </Col>
                                             <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Detalhes:</span>{maintenance.detalhes}
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Detalhes:</span>{maintenance.description}
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end pt-3 pt-lg-0">
-                                                <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(i, maintenance)} />
-                                                <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(i)} />
+                                                <BtnAction name={"Editar"} icon={"edit"} action={() => this.handleShow(maintenance)} />
+                                                <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(maintenance)} />
                                             </Col>
                                         </Row>
                                     </CardList>
@@ -110,7 +123,7 @@ export default class Maintenance extends Component {
                 </Layout>
                 <Modal show={show} size={"lg"} onHide={this.handleClose}>
                     <Modal.Header className="border-0">
-                        <Modal.Title style={{ color: "rgba(0,0,0,.5)" }}>{(index !== -1) ? "Editar" : "Adicionar"} manutenção</Modal.Title>
+                        <Modal.Title style={{ color: "rgba(0,0,0,.5)" }}>{(maintenance.id !== undefined) ? "Editar" : "Adicionar"} manutenção</Modal.Title>
                         <Button variant="muted" onClick={this.handleClose}><MaterialIcon icon="close" /></Button>
                     </Modal.Header>
                     <Modal.Body>
@@ -119,23 +132,23 @@ export default class Maintenance extends Component {
                                 <Row>
                                     <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Equipamento</Form.Label>
-                                        <Form.Control as="select" name="equipment" value={maintenance.equipment} onChange={this.myChangeHandler} required>
+                                        <Form.Control as="select" name="equipment_id" value={(maintenance.equipment_id !== undefined) ? maintenance.equipment_id : ""} onChange={this.myChangeHandler} required>
                                             <option></option>
-                                            {data.equipments.map((equipment, index) => (
-                                                <option value={equipment.nome} key={index}>{equipment.nome}</option>
+                                            {equipments.map((item, index) => (
+                                                <option value={item.id} key={index}>{item.name}</option>
                                             ))}
                                         </Form.Control>
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
                                         <Form.Label>Data</Form.Label>
-                                        <Form.Control type="date" name="data" value={maintenance.data} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="date" name="date" value={String(maintenance.date).substr(0, 10)} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={12} className="mb-3">
                                         <Form.Label>Detalhes</Form.Label>
-                                        <Form.Control as="textarea" name="detalhes" rows="5" value={maintenance.detalhes} onChange={this.myChangeHandler} required />
+                                        <Form.Control as="textarea" name="description" rows="5" value={maintenance.description} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={12} className="mb-3">
-                                        <Button type="submit" variant="success" className="d-flex ml-auto">{(index !== -1) ? "Salvar" : "Adicionar"}</Button>
+                                        <Button type="submit" variant="success" className="d-flex ml-auto">{(maintenance.id !== undefined) ? "Salvar" : "Adicionar"}</Button>
                                     </Col>
                                 </Row>
                             </Form>

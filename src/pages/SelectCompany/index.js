@@ -1,34 +1,20 @@
 import React, { Component } from 'react';
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import IconBusiness from "../../assets/img/business-black.svg";
-
-const styles = {
-    h3: {
-        fontSize: "25px",
-        color: "#211F25"
-    },
-    div: {
-        background: "#7FFF7F",
-        borderRadius: "50%",
-        width: "80px",
-        height: "80px"
-    }
-}
+import NavbarCompany from '../../components/NavbarCompany';
+import api from "../../config/api";
+import { decodeToken } from '../../config/auth';
 
 export default class SelectCompany extends Component {
 
     state = {
-        email: '',
-        company: ''
+        companies: [],
+        user: decodeToken(),
+        company: []
     }
 
     componentDidMount() {
-        const email = localStorage.getItem("email");
-        this.setState({ email });
+        this.getCompanies();
     }
 
     myChangeHandler = (event) => {
@@ -37,47 +23,58 @@ export default class SelectCompany extends Component {
         this.setState({ [nam]: val });
     }
 
-    company = async event => {
-        event.preventDefault();
-        const { company } = this.state;
-        localStorage.setItem("company", company);
-        window.location.href = "/home";
+    getCompanies = async () => {
+        const response = await api.get("/company");
+        this.setState({ companies: response.data });
     }
 
+    setCompany = async (event) => {
+        event.preventDefault();
+        const { company = [] } = this.state;
+        await api.post("/select-company", { company_id: company })
+            .then((res) => {
+                localStorage.setItem("TOKEN_KEY", res.data.token);
+                window.location.href = "/home";
+            })
+            .catch(() => {
+
+            })
+    }
 
     render() {
-        const { email, company } = this.state;
+        const { companies = [] } = this.state;
+        const { user } = this.state.user;
 
         return (
             <>
+                <NavbarCompany className="fixed-top" />
                 <Container className="h-100">
                     <Row className="justify-content-center align-items-center h-100">
                         <Col xs={12} lg={6}>
-                            <div className="d-flex align-items-center justify-content-center mx-auto mb-4" style={styles.div}>
+                            <div className="d-flex align-items-center justify-content-center mx-auto mb-4" style={{ background: "#7FFF7F", borderRadius: "50%", width: "80px", height: "80px" }}>
                                 <img src={IconBusiness} alt="Empresa" width="50px" />
                             </div>
                             <p className="text-center mb-2">Você está logado como:</p>
-                            <h3 className="m-0 font-weight-bold text-center" style={styles.h3}>{email}</h3>
-                            <Form onSubmit={this.company} className="pt-5">
+                            <h3 className="m-0 font-weight-bold text-center" style={{ fontSize: "25px", color: "#211F25" }}>{user.email}</h3>
+                            <Form onSubmit={this.setCompany} className="pt-5">
                                 <Row className="mb-4">
                                     <Col xs={12}>
                                         <Form.Label className="text-success font-weight-bold">Selecionar empresa:</Form.Label>
                                         <Form.Control as="select" name="company" size="lg" onChange={this.myChangeHandler} required>
                                             <option></option>
-                                            <option value="Universidade Cruzeiro do Sul">Universidade Cruzeiro do Sul</option>
-                                            <option value="Universidade Positivo">Universidade Positivo</option>
+                                            {companies.map((company, index) => (
+                                                <option value={company.id} key={index}>{company.name}</option>
+                                            ))}
                                         </Form.Control>
                                     </Col>
                                 </Row>
-                                {(company !== '') ?
-                                    <Row className="mb-4">
-                                        <Col xs={12} className="d-flex align-items-center justify-content-end">
-                                            <Button variant="success" type="submit" size="md">
-                                                Continuar
+                                <Row className="mb-4">
+                                    <Col xs={12} className="d-flex align-items-center justify-content-end">
+                                        <Button variant="success" type="submit" size="md">
+                                            Continuar
                                         </Button>
-                                        </Col>
-                                    </Row>
-                                    : <></>}
+                                    </Col>
+                                </Row>
                             </Form>
                         </Col>
                     </Row>

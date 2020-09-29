@@ -69,8 +69,8 @@ export default class User extends Component {
                                 <CardListHeader>
                                     <Row>
                                         <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Nome</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Empresa</Col>
                                         <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">E-mail</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Empresa</Col>
                                         <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Permissão</Col>
                                         <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center"></Col>
                                     </Row>
@@ -115,11 +115,11 @@ export default class User extends Component {
                                         <Form.Control type="text" name="name" value={user.name} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
-                                        <Form.Label>Empresa</Form.Label>
+                                        <Form.Label>E-mail</Form.Label>
                                         <Form.Control type="text" name="email" value={user.email} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">
-                                        <Form.Label>E-mail</Form.Label>
+                                        <Form.Label>Empresa</Form.Label>
                                         <Form.Control type="text" name="company" value={user.company} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-3">

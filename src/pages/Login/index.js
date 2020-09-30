@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Image, Form, Button, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Background from "../../assets/img/background.svg";
 import Logo from "../../assets/img/bee.svg";
 import api from "../../config/api";
@@ -51,32 +51,32 @@ export default class Login extends Component {
                         <Col xs={12} sm={8} lg={6} className="d-flex align-items-self justify-content-between flex-column mt-2">
                             <div className="d-flex align-items-center justify-content-center">
                                 <Image src={Logo} className="img-fluid" width={50} />
-                                <h3 className="font-weight-bold mb-0 ml-2 mt-2">Sustentabee</h3>
+                                <h3 className="font-weight-bold mb-0 ml-2 mt-2 text-primary">Sustentabee</h3>
                             </div>
                             <div className="px-lg-5">
-                                <h1 className="d-inline-flex bg-primary text-uppercase px-2 pb-0 pt-2 font-weight-bold">Fazer login</h1>
+                                <h1 className="d-inline-flex text-primary text-uppercase pb-0 pt-2 font-weight-bold">Fazer login</h1>
                                 <p className="text-muted mb-4 mt-2 text-uppercase font-weight-bold small">Solução integrada de monitoramento de refrigeradores comerciais</p>
                                 <Form onSubmit={this.login}>
                                     <Row className="mb-3">
                                         <Col xs={12}>
-                                            <Form.Label className="text-muted">E-mail</Form.Label>
-                                            <Form.Control type="email" name="email" size="lg" onChange={this.myChangeHandler} required />
+                                            <Form.Label>E-mail</Form.Label>
+                                            <Form.Control type="email" name="email" onChange={this.myChangeHandler} required />
                                         </Col>
                                     </Row>
                                     <Row className="mb-3">
                                         <Col xs={12} className="d-flex align-items-center justify-content-between">
-                                            <Form.Label className="text-muted">Senha</Form.Label>
-                                            <Link to={"#"} className="small text-primary">Esqueceu sua senha?</Link>
+                                            <Form.Label>Senha</Form.Label>
+                                            {/* <Link to={"#"} className="small text-primary">Esqueceu sua senha?</Link> */}
                                         </Col>
                                         <Col xs={12}>
-                                            <Form.Control type="password" name="password" size="lg" onChange={this.myChangeHandler} required />
+                                            <Form.Control type="password" name="password" onChange={this.myChangeHandler} required />
                                         </Col>
                                     </Row>
                                     <Row className="mb-3">
                                         <Col xs={12} className="d-flex align-items-center justify-content-between">
                                             {(error) ? <p className="small text-danger mb-0">E-mail e/ou senha inválidos!</p> : <>&nbsp;</>}
                                             {(load) ?
-                                                <Button variant="primary" size="lg" className="d-inline-flex align-items-center rounded-0 text-white" disabled>
+                                                <Button variant="primary" className="button d-flex align-items-center" disabled>
                                                     <Spinner
                                                         as="span"
                                                         animation="border"
@@ -86,7 +86,7 @@ export default class Login extends Component {
                                                     />
                                                     <span className="ml-3">Carregando...</span>
                                                 </Button>
-                                                : <Button type="submit" size="lg" className="text-white rounded-0">Entrar</Button>}
+                                                : <Button type="submit" className="button">Entrar</Button>}
                                         </Col>
                                     </Row>
                                 </Form>

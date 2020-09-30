@@ -4,6 +4,7 @@ import { Container, Navbar } from 'react-bootstrap';
 import MaterialIcon from "material-icons-react";
 import Footer from '../Footer';
 import { decodeToken } from '../../config/auth';
+import { Link } from 'react-router-dom';
 
 export default class Layout extends Component {
 
@@ -35,7 +36,7 @@ export default class Layout extends Component {
                                         <span onClick={this.toggleSidebar}><MaterialIcon icon={"menu"} /></span>
                                     </Navbar.Brand>
                                     <Navbar.Text className="ml-auto">
-                                        <span>{user.company_name}</span>
+                                        <Link to={"/selecionar-empresa"} style={{ textDecoration: "none" }}><span className="text-white text-uppercase font-weight-bold">{user.company_name}</span></Link>
                                     </Navbar.Text>
                                     <Navbar.Brand className="ml-auto">
                                         <span onClick={this.logout}><MaterialIcon icon={"power_settings_new"} /></span>
@@ -43,7 +44,7 @@ export default class Layout extends Component {
                                 </Navbar>
                             </Container>
                         </div>
-                        <div className="w-100 mx-auto overflow-auto px-lg-4">
+                        <div className="w-100 mx-auto overflow-auto">
                             {this.props.children}
                             <Footer />
                         </div>

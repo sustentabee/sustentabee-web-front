@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Modal, Spinner } from "react-bootstrap";
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import BtnAction from '../../components/BtnAction';
@@ -7,6 +7,7 @@ import CardList from '../../components/CardList';
 import CardListHeader from '../../components/CardListHeader';
 import MaterialIcon from "material-icons-react";
 import api from "../../config/api";
+import swal from "sweetalert";
 
 export default class Maintenance extends Component {
 
@@ -15,6 +16,7 @@ export default class Maintenance extends Component {
         equipments: [],
         maintenances: [],
         maintenance: [],
+        load: false,
     }
 
     componentDidMount() {
@@ -44,70 +46,89 @@ export default class Maintenance extends Component {
     save = async event => {
         event.preventDefault();
         const { maintenance } = this.state;
+        this.setState({ load: true });
         if (maintenance.id !== undefined) {
             await api.put(`/maintenance/${maintenance.id}`, maintenance)
                 .then(() => {
                     this.getMaintenances();
+                    swal({ icon: "success", title: "Sucesso!", text: "Manutenção editada com sucesso." });
+                    this.setState({ load: false });
                 })
                 .catch(() => {
-
+                    swal({ icon: "error", title: "Erro!", text: "Erro ao editar a manutenção, tente novamente mais tarde." });
+                    this.setState({ load: false });
                 })
         } else {
             await api.post("/maintenance", maintenance)
                 .then(() => {
                     this.getMaintenances();
+                    swal({ icon: "success", title: "Sucesso!", text: "Manutenção cadastrada com sucesso." });
+                    this.setState({ load: false });
                 })
                 .catch(() => {
-
+                    swal({ icon: "error", title: "Erro!", text: "Erro ao cadastrar a manutenção, tente novamente mais tarde." });
+                    this.setState({ load: false });
                 })
         }
         this.handleClose();
     }
 
     delete = async maintenance => {
-        await api.delete(`/maintenance/${maintenance.id}`, maintenance)
-            .then(() => {
-                this.getMaintenances();
-            })
-            .catch(() => {
-
-            })
+        swal({
+            title: "Atenção",
+            text: "Deseja excluir esta manutenção?",
+            icon: "warning",
+            buttons: ["Cancelar", "OK"],
+            dangerMode: false,
+        })
+            .then(async (res) => {
+                if (res) {
+                    await api.delete(`/maintenance/${maintenance.id}`, maintenance)
+                        .then(() => {
+                            this.getMaintenances();
+                            swal({ icon: "success", title: "Sucesso!", text: "Manutenção removida com sucesso." });
+                        })
+                        .catch(() => {
+                            swal({ icon: "error", title: "Erro!", text: "Erro ao remover a manutenção, tente novamente mais tarde." });
+                        })
+                }
+            });
     }
 
     render() {
-        const { maintenances, maintenance, show, equipments } = this.state;
+        const { maintenances, maintenance, show, equipments, load = false } = this.state;
 
         return (
             <>
                 <Layout>
                     <Header title={"Manutenções"}>
-                        <Button variant="success" onClick={() => this.handleShow()}>Adicionar</Button>
+                        <Button variant="success" className="button" onClick={() => this.handleShow()}>Adicionar</Button>
                     </Header>
                     <Container fluid>
                         <Row>
                             <Col xs={12}>
                                 <CardListHeader>
                                     <Row>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Equipamento</Col>
-                                        <Col xs={12} lg={3} className="font-weight-bold d-flex align-items-center">Marca/Modelo</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Data</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Detalhes</Col>
-                                        <Col xs={12} lg={3} className="font-weight-bold d-flex align-items-center"></Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Equipamento</Col>
+                                        <Col xs={12} lg={3} className="font-weight-bold d-flex align-items-center text-primary">Marca/Modelo</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Data</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Detalhes</Col>
+                                        <Col xs={12} lg={3} className="font-weight-bold d-flex align-items-center text-primary"></Col>
                                     </Row>
                                 </CardListHeader>
                                 {maintenances.map((maintenance, index) => (
                                     <CardList key={index}>
                                         <Row>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{maintenance.name}
                                             </Col>
-                                            <Col xs={12} lg={3} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={3} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{maintenance.brand} - {maintenance.model}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{new Date(maintenance.date).toLocaleDateString()}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Detalhes:</span>{maintenance.description}
                                             </Col>
                                             <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end pt-3 pt-lg-0">
@@ -148,7 +169,18 @@ export default class Maintenance extends Component {
                                         <Form.Control as="textarea" name="description" rows="5" value={maintenance.description} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={12} className="mb-3">
-                                        <Button type="submit" variant="success" className="d-flex ml-auto">{(maintenance.id !== undefined) ? "Salvar" : "Adicionar"}</Button>
+                                        {(load) ?
+                                            <Button variant="success" className="button d-flex ml-auto d-flex align-items-center" disabled>
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="ml-3">Carregando...</span>
+                                            </Button>
+                                            : <Button type="submit" variant="success" className="button d-flex ml-auto">{(maintenance.id !== undefined) ? "Salvar" : "Adicionar"}</Button>}
                                     </Col>
                                 </Row>
                             </Form>

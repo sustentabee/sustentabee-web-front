@@ -17,7 +17,7 @@ export default class Header extends Component {
                                 <Card.Body style={{ padding: "1.25rem 0" }}>
                                     <Row>
                                         <Col xs={6} lg={6} className="d-flex align-items-center justify-content-start">
-                                            <h3 className="m-0" style={{ color: 'rgba(0, 0, 0, .5)' }}>{this.props.title}</h3>
+                                            <h3 className="m-0 text-muted">{this.props.title}</h3>
                                         </Col>
                                         <Col xs={6} lg={6} className="d-flex align-items-center justify-content-end">
                                             {this.props.children}

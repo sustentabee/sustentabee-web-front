@@ -1,13 +1,13 @@
 /* Font */
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /* Variables */
 
-$green: #7FFF7F !default;
+$green: #31b88a !default;
 $black: #211F25 !default;
 
-$theme-colors: ("primary": #7FFF7F, "dark": #211F25);
+$theme-colors: ("primary": #31b88a, "dark": #211F25);
 
 /* Bootstrap */
 
@@ -20,7 +20,7 @@ body,
 #root {
     height: 100%;
     background: #f7f7f7;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Exo 2', sans-serif;
     color: #211F25;
 }
 
@@ -169,4 +169,33 @@ input.form-control {
 .home-card {
     max-height: 448px;
     overflow: auto;
+}
+
+/* Button */
+
+.button {
+    color: #fff;
+    background: #31b88a;
+    border-color: #31b88a;
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.button-outline {
+    color: #31b88a;
+    background: #fff;
+    border-color: #fff;
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+label {
+    font-size: 14px;
+    color: #31b88a;
+    font-weight: bold;
+    margin-bottom: .25rem;
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Modal, Spinner } from "react-bootstrap";
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import BtnAction from '../../components/BtnAction';
@@ -7,6 +7,7 @@ import CardList from '../../components/CardList';
 import CardListHeader from '../../components/CardListHeader';
 import MaterialIcon from "material-icons-react";
 import api from "../../config/api";
+import swal from "sweetalert";
 
 export default class Equipment extends Component {
 
@@ -14,7 +15,7 @@ export default class Equipment extends Component {
         show: false,
         equipments: [],
         equipment: [],
-        index: -1
+        load: false,
     }
 
     componentDidMount() {
@@ -37,71 +38,90 @@ export default class Equipment extends Component {
 
     save = async event => {
         event.preventDefault();
+        this.setState({ load: true });
         const { equipment } = this.state;
         if (equipment.id !== undefined) {
             await api.put(`/equipment/${equipment.id}`, equipment)
                 .then(() => {
                     this.getEquipments();
+                    swal({ icon: "success", title: "Sucesso!", text: "Equipamento editado com sucesso." });
+                    this.setState({ load: false });
                 })
                 .catch(() => {
-
+                    swal({ icon: "error", title: "Erro!", text: "Erro ao editar o equipamento, tente novamente mais tarde." });
+                    this.setState({ load: false });
                 })
         } else {
             await api.post("/equipment", equipment)
                 .then(() => {
                     this.getEquipments();
+                    swal({ icon: "success", title: "Sucesso!", text: "Equipamento cadastrado com sucesso." });
+                    this.setState({ load: false });
                 })
                 .catch(() => {
-
+                    swal({ icon: "error", title: "Erro!", text: "Erro ao cadastrar o equipamento, tente novamente mais tarde." });
+                    this.setState({ load: false });
                 })
         }
         this.handleClose();
     }
 
     delete = async equipment => {
-        await api.delete(`/equipment/${equipment.id}`, equipment)
-            .then(() => {
-                this.getEquipments();
-            })
-            .catch(() => {
-
-            })
+        swal({
+            title: "Atenção",
+            text: "Deseja excluir este equipamento?",
+            icon: "warning",
+            buttons: ["Cancelar", "OK"],
+            dangerMode: false,
+        })
+            .then(async (res) => {
+                if (res) {
+                    await api.delete(`/equipment/${equipment.id}`, equipment)
+                        .then(() => {
+                            this.getEquipments();
+                            swal({ icon: "success", title: "Sucesso!", text: "Equipamento removido com sucesso." });
+                        })
+                        .catch(() => {
+                            swal({ icon: "error", title: "Erro!", text: "Erro ao remover o equipamento, tente novamente mais tarde." });
+                        })
+                }
+            });
     }
 
     render() {
-        const { equipments, equipment, show } = this.state;
+        const { equipments, equipment, show, load = false } = this.state;
 
         return (
             <>
                 <Layout>
                     <Header title={"Equipamentos"}>
-                        <Button variant="success" onClick={() => this.handleShow()}>Adicionar</Button>
+                        <Button variant="success" className="button" onClick={() => this.handleShow()}>Adicionar</Button>
                     </Header>
                     <Container fluid>
                         <Row>
                             <Col xs={12}>
                                 <CardListHeader>
                                     <Row>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Nome</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Serial</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Marca/Modelo</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Data de Aquisição</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center"></Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Nome</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Serial</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Marca/Modelo</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Data de Aquisição</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary"></Col>
                                     </Row>
                                 </CardListHeader>
                                 {equipments.map((equipment, index) => (
                                     <CardList key={index}>
                                         <Row>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Nome:</span>{equipment.name}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Serial:</span>{equipment.serial}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{equipment.brand} - {equipment.model}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
                                                 <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data de Aquisição:</span>{new Date(equipment.dateAcquisition).toLocaleDateString()}
                                             </Col>
                                             <Col xs={12} lg={4} className="d-flex align-items-center justify-content-center justify-content-lg-end pt-3 pt-lg-0">
@@ -158,7 +178,18 @@ export default class Equipment extends Component {
                                         <Form.Control type="number" name="estimatedConsumption" value={equipment.estimatedConsumption} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={12} className="mb-3">
-                                        <Button type="submit" variant="success" className="d-flex ml-auto">{(equipment.id !== undefined) ? "Salvar" : "Adicionar"}</Button>
+                                        {(load) ?
+                                            <Button variant="success" className="button d-flex ml-auto d-flex align-items-center" disabled>
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="ml-3">Carregando...</span>
+                                            </Button>
+                                            : <Button type="submit" variant="success" className="button d-flex ml-auto">{(equipment.id !== undefined) ? "Salvar" : "Adicionar"}</Button>}
                                     </Col>
                                 </Row>
                             </Form>

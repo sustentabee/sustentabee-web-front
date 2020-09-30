@@ -16,7 +16,7 @@ export default class Sidebar extends Component {
                     <div>
                         <div className="d-flex align-items-center justify-content-center my-3 px-5 flex-column">
                             <img src={Logo} className="img-fluid px-3" alt="Sustentabee" />
-                            <h3 className="font-weight-bold" style={{ color: "#211F25" }}>Sustentabee</h3>
+                            <h3 className="font-weight-bold text-primary">Sustentabee</h3>
                         </div>
                         <div className="d-flex align-items-center justify-content-center px-2 pt-5">
                             <Accordion className="w-100">

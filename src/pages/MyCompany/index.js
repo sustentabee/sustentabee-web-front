@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card, Spinner } from "react-bootstrap";
 import NavbarCompany from '../../components/NavbarCompany';
 import api from "../../config/api";
 import { decodeToken } from '../../config/auth';
-import MaterialIcon from "material-icons-react";
+import Header from '../../components/Header';
+import swal from 'sweetalert';
+import BtnAction from '../../components/BtnAction';
 
 export default class MyCompany extends Component {
 
     state = {
         companies: [],
         user: decodeToken(),
-        company: []
+        company: [],
+        load: false,
     }
 
     componentDidMount() {
@@ -38,23 +41,28 @@ export default class MyCompany extends Component {
     save = async (event) => {
         event.preventDefault();
         const { company = [] } = this.state;
-
+        this.setState({ load: true });
         if (company.id !== undefined) {
             await api.put(`/company/${company.id}`, company)
                 .then(() => {
                     this.getCompanies();
+                    swal({ icon: "success", title: "Sucesso!", text: "Empresa editada com sucesso." });
+                    this.setState({ load: false });
                 })
-                .catch(error => {
-                    console.log({ error })
+                .catch(() => {
+                    swal({ icon: "error", title: "Erro!", text: "Erro ao editar a empresa, tente novamente mais tarde." });
+                    this.setState({ load: false });
                 })
         } else {
-            console.log(company)
             await api.post(`/company`, company)
                 .then(() => {
                     this.getCompanies();
+                    swal({ icon: "success", title: "Sucesso!", text: "Empresa cadastrada com sucesso." });
+                    this.setState({ load: false });
                 })
-                .catch(error => {
-                    console.log({ error })
+                .catch(() => {
+                    swal({ icon: "error", title: "Erro!", text: "Erro ao cadastrar a empresa, tente novamente mais tarde." });
+                    this.setState({ load: false });
                 })
         }
         this.setState({ company: [] })
@@ -62,13 +70,25 @@ export default class MyCompany extends Component {
     }
 
     delete = async (company) => {
-        await api.delete(`/company/${company.id}`)
-            .then(() => {
-                this.getCompanies();
-            })
-            .catch(error => {
-                console.log({ error })
-            })
+        swal({
+            title: "Atenção",
+            text: "Deseja excluir esta empresa?",
+            icon: "warning",
+            buttons: ["Cancelar", "OK"],
+            dangerMode: false,
+        })
+            .then(async (res) => {
+                if (res) {
+                    await api.delete(`/company/${company.id}`)
+                        .then(() => {
+                            this.getCompanies();
+                            swal({ icon: "success", title: "Sucesso!", text: "Empresa removida com sucesso." });
+                        })
+                        .catch(error => {
+                            swal({ icon: "error", title: "Erro!", text: "Erro ao remover a empresa, tente novamente mais tarde." });
+                        })
+                }
+            });
     }
 
     clear = () => {
@@ -82,57 +102,68 @@ export default class MyCompany extends Component {
     }
 
     render() {
-        const { companies = [], company } = this.state;
+        const { companies = [], company, load = false } = this.state;
 
         return (
             <>
                 <NavbarCompany />
-                <Container className="mt-3">
-                    <Row>
-                        <Col xs={12}>
-                            <h2 className="text-muted">Minhas empresas</h2>
-                        </Col>
-                    </Row>
-                    <Row>
+                <Header title={"Minhas empresas"} />
+                <Container className="mt-3" fluid>
+                    <Row className="justify-content-center">
                         <Col xs={12} lg={4}>
-                            {companies.map((company, index) => (
-                                <Card key={index} className="border-0 shadow-sm mb-2">
-                                    <Card.Body>
-                                        <Row>
-                                            <Col xs={9}>
-                                                <h6 className="mb-0">{company.name}</h6>
-                                                <p className="text-muted mb-0 small">{company.document_number} - {company.phone}</p>
-                                            </Col>
-                                            <Col xs={3} className="d-flex align-items-center justify-content-end">
-                                                <span onClick={() => this.edit(company)} className="ml-2"><MaterialIcon icon="edit" /></span>
-                                                <span onClick={() => this.delete(company)} className="ml-2"><MaterialIcon icon="close" /></span>
-                                            </Col>
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            ))}
-                        </Col>
-                        <Col xs={12} lg={8}>
                             <Form onSubmit={this.save} >
                                 <Row>
                                     <Col xs={12} className="mb-4">
-                                        <Form.Label className="text-muted text-uppercase mb-1 small font-weight-bold">Nome</Form.Label>
+                                        <Form.Label>Nome</Form.Label>
                                         <Form.Control type="text" name="name" value={company.name} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} className="mb-4">
-                                        <Form.Label className="text-muted text-uppercase mb-1 small font-weight-bold">CNPJ</Form.Label>
+                                        <Form.Label>CNPJ</Form.Label>
                                         <Form.Control type="text" name="document_number" value={company.document_number} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} className="mb-4">
-                                        <Form.Label className="text-muted text-uppercase mb-1 small font-weight-bold">Telefone</Form.Label>
+                                        <Form.Label>Telefone</Form.Label>
                                         <Form.Control type="text" name="phone" value={company.phone} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} className="mb-4 text-right" >
-                                        <Button type="button" variant="muted" className="ml-2" onClick={() => this.clear()}>Limpar</Button>
-                                        <Button type="submit" className="text-white ml-2">Salvar</Button>
+                                        <Button type="button" variant="muted" className="button-outline ml-2" onClick={() => this.clear()}>Limpar</Button>
+                                        {(load) ?
+                                            <Button variant="success" className="button ml-2" disabled>
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="ml-3">Carregando...</span>
+                                            </Button>
+                                            : <Button type="submit" className="button ml-2">Salvar</Button>}
                                     </Col>
                                 </Row>
                             </Form>
+                        </Col>
+                        <Col xs={12} lg={8}>
+                            <Row>
+                                {companies.map((company, index) => (
+                                    <Col xs={12} lg={6} key={index} >
+                                        <Card className="border-0 shadow-sm mb-2">
+                                            <Card.Body>
+                                                <Row>
+                                                    <Col xs={9}>
+                                                        <h6 className="mb-0">{company.name}</h6>
+                                                        <p className="text-muted mb-0 small">{company.document_number} - {company.phone}</p>
+                                                    </Col>
+                                                    <Col xs={3} className="d-flex align-items-center justify-content-end">
+                                                        <BtnAction name={"Editar"} icon={"edit"} action={() => this.edit(company)} />
+                                                        <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(company)} />
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                ))}
+                            </Row>
                         </Col>
                     </Row>
                 </Container>

@@ -51,16 +51,16 @@ export default class SelectCompany extends Component {
                 <Container className="h-100">
                     <Row className="justify-content-center align-items-center h-100">
                         <Col xs={12} lg={6}>
-                            <div className="d-flex align-items-center justify-content-center mx-auto mb-4" style={{ background: "#7FFF7F", borderRadius: "50%", width: "80px", height: "80px" }}>
+                            <div className="d-flex align-items-center justify-content-center mx-auto mb-4 bg-primary" style={{ borderRadius: "50%", width: "80px", height: "80px" }}>
                                 <img src={IconBusiness} alt="Empresa" width="50px" />
                             </div>
                             <p className="text-center mb-2">Você está logado como:</p>
-                            <h3 className="m-0 font-weight-bold text-center" style={{ fontSize: "25px", color: "#211F25" }}>{user.email}</h3>
-                            <Form onSubmit={this.setCompany} className="pt-5">
+                            <h3 className="m-0 font-weight-bold text-center text-muted" style={{ fontSize: "25px" }}>{user.name}</h3>
+                            <Form onSubmit={this.setCompany} className="pt-3">
                                 <Row className="mb-4">
                                     <Col xs={12}>
                                         <Form.Label className="text-success font-weight-bold">Selecionar empresa:</Form.Label>
-                                        <Form.Control as="select" name="company" size="lg" onChange={this.myChangeHandler} required>
+                                        <Form.Control as="select" name="company" onChange={this.myChangeHandler} required>
                                             <option></option>
                                             {companies.map((company, index) => (
                                                 <option value={company.id} key={index}>{company.name}</option>
@@ -70,7 +70,7 @@ export default class SelectCompany extends Component {
                                 </Row>
                                 <Row className="mb-4">
                                     <Col xs={12} className="d-flex align-items-center justify-content-end">
-                                        <Button variant="success" type="submit" size="md">
+                                        <Button variant="success" type="submit" className="button">
                                             Continuar
                                         </Button>
                                     </Col>

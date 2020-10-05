@@ -6,6 +6,7 @@ import { decodeToken } from '../../config/auth';
 import Header from '../../components/Header';
 import swal from 'sweetalert';
 import BtnAction from '../../components/BtnAction';
+import axios from "axios";
 
 export default class MyCompany extends Component {
 
@@ -23,12 +24,36 @@ export default class MyCompany extends Component {
     myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;
+
+        if (nam === "zipcode") {
+            this.getAddress(val);
+        }
+
         this.setState({
             company: {
                 ...this.state.company,
                 [nam]: val
             }
         });
+    }
+
+    getAddress = async (zipcode) => {
+        zipcode = String(zipcode).normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z])/g, '');
+        if (zipcode.length >= 8) {
+            const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://viacep.com.br/ws/${zipcode}/json/`);
+            if (response.data !== null) {
+                this.setState({
+                    company: {
+                        ...this.state.company,
+                        zipcode: zipcode,
+                        address: response.data.logradouro,
+                        neighborhood: response.data.bairro,
+                        city: response.data.localidade,
+                        state: response.data.uf,
+                    }
+                })
+            }
+        }
     }
 
     getCompanies = async () => {
@@ -91,15 +116,7 @@ export default class MyCompany extends Component {
             });
     }
 
-    clear = () => {
-        this.setState({
-            company: {
-                name: "",
-                document_number: "",
-                phone: ""
-            }
-        })
-    }
+    clear = () => { this.setState({ company: { name: "", document_number: "", phone: "", zipcode: "", address: "", neighborhood: "", city: "", state: "", number: "", complement: "" } }) }
 
     render() {
         const { companies = [], company, load = false } = this.state;
@@ -110,20 +127,48 @@ export default class MyCompany extends Component {
                 <Header title={"Minhas empresas"} />
                 <Container className="mt-3" fluid>
                     <Row className="justify-content-center">
-                        <Col xs={12} lg={4}>
+                        <Col xs={12} lg={6}>
                             <Form onSubmit={this.save} >
                                 <Row>
-                                    <Col xs={12} className="mb-4">
+                                    <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>Nome</Form.Label>
                                         <Form.Control type="text" name="name" value={company.name} onChange={this.myChangeHandler} required />
                                     </Col>
-                                    <Col xs={12} className="mb-4">
+                                    <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>CNPJ</Form.Label>
                                         <Form.Control type="text" name="document_number" value={company.document_number} onChange={this.myChangeHandler} required />
                                     </Col>
-                                    <Col xs={12} className="mb-4">
+                                    <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>Telefone</Form.Label>
                                         <Form.Control type="text" name="phone" value={company.phone} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-4">
+                                        <Form.Label>CEP</Form.Label>
+                                        <Form.Control type="text" name="zipcode" value={company.zipcode} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={12} className="mb-4">
+                                        <Form.Label>Endereço</Form.Label>
+                                        <Form.Control type="text" name="address" value={company.address} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-4">
+                                        <Form.Label>Bairro</Form.Label>
+                                        <Form.Control type="text" name="neighborhood" value={company.neighborhood} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-4">
+                                        <Form.Label>Cidade</Form.Label>
+                                        <Form.Control type="text" name="city" value={company.city} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-4">
+                                        <Form.Label>Estado</Form.Label>
+                                        <Form.Control type="text" name="state" value={company.state} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={6} className="mb-4">
+                                        <Form.Label>Número</Form.Label>
+                                        <Form.Control type="text" name="number" value={company.number} onChange={this.myChangeHandler} required />
+                                    </Col>
+                                    <Col xs={12} lg={12} className="mb-4">
+                                        <Form.Label>Complemento</Form.Label>
+                                        <Form.Control type="text" name="complement" value={company.complement} onChange={this.myChangeHandler} />
                                     </Col>
                                     <Col xs={12} className="mb-4 text-right" >
                                         <Button type="button" variant="muted" className="button-outline ml-2" onClick={() => this.clear()}>Limpar</Button>
@@ -143,18 +188,21 @@ export default class MyCompany extends Component {
                                 </Row>
                             </Form>
                         </Col>
-                        <Col xs={12} lg={8}>
+                        <Col xs={12} lg={6}>
                             <Row>
                                 {companies.map((company, index) => (
-                                    <Col xs={12} lg={6} key={index} >
+                                    <Col xs={12} lg={12} key={index} >
                                         <Card className="border-0 shadow-sm mb-2">
                                             <Card.Body>
                                                 <Row>
-                                                    <Col xs={9}>
+                                                    <Col xs={12} lg={9}>
                                                         <h6 className="mb-0">{company.name}</h6>
                                                         <p className="text-muted mb-0 small">{company.document_number} - {company.phone}</p>
+                                                        <p className="text-muted mb-0 small">{company.address} - {company.neighborhood} - Número {company.number}</p>
+                                                        <p className="text-muted mb-0 small">{company.city} - {company.state} - {company.zipcode}</p>
+                                                        <p className="text-muted mb-0 small">{company.complement}</p>
                                                     </Col>
-                                                    <Col xs={3} className="d-flex align-items-center justify-content-end">
+                                                    <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
                                                         <BtnAction name={"Editar"} icon={"edit"} action={() => this.edit(company)} />
                                                         <BtnAction name={"Excluir"} icon={"close"} action={() => this.delete(company)} />
                                                     </Col>

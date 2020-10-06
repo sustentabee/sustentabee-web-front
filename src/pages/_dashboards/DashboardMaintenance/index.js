@@ -4,11 +4,11 @@ import Layout from '../../../components/Layout';
 import Header from '../../../components/Header';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import data from "../../../config/data";
 import MaterialIcon from "material-icons-react";
 import Select from 'react-select';
 import moment from "moment";
 import { ExportToCsv } from 'export-to-csv';
+import api from "../../../config/api";
 
 export default class DashboardMaintenance extends Component {
 
@@ -17,30 +17,58 @@ export default class DashboardMaintenance extends Component {
         totalMaintenances: [],
         startDate: '',
         endDate: '',
-        brands: [{ value: "Brastemp", label: "Brastemp" }, { value: "Consul", label: "Consul" }, { value: "Eletrolux", label: "Eletrolux" }],
+        brands: [],
         brand: [],
         show: false,
+        equipments: [],
+        maintenances: [],
     }
 
     componentDidMount() {
+        this.getEquipments();
+    }
+
+    getMaintenances = async () => {
+        const response = await api.get("/maintenance");
+        this.setState({ maintenances: response.data });
         this.createChart();
+    }
+
+    getEquipments = async () => {
+        const response = await api.get("/equipment");
+        this.setState({ equipments: response.data });
+        this.getMaintenances();
+        const brands = [];
+        const { data } = response;
+        for (let i = 0; i < data.length; i++) {
+            let add = true;
+            for (let j = 0; j < brands.length; j++) {
+                if (brands[j].value === data[i].name) {
+                    add = false;
+                }
+            }
+            if (add) {
+                brands.push({ value: data[i].brand, label: data[i].brand })
+            }
+        }
+        this.setState({ brands });
     }
 
     createChart = (brand = this.state.brand, startDate = this.state.startDate, endDate = this.state.endDate) => {
         const arr = [];
-        let { equipments, maintenances } = data;
+        let { equipments, maintenances } = this.state;
 
         if (brand !== null) {
             if (brand.length !== 0) {
                 const b = brand.map(item => item.value);
-                equipments = equipments.filter(equipment => b.indexOf(equipment.marca) !== -1)
+                equipments = equipments.filter(equipment => b.indexOf(equipment.brand) !== -1)
             }
         }
 
         if (startDate !== "") {
             const dateFilter = moment(new Date(startDate));
             maintenances = maintenances.filter(maintenance => {
-                const dateMaintenance = moment(new Date(maintenance.data));
+                const dateMaintenance = moment(new Date(maintenance.date));
                 const duration = moment.duration(dateFilter.diff(dateMaintenance));
                 const days = duration.asDays();
                 return (days <= 0) ? maintenance : "";
@@ -49,7 +77,7 @@ export default class DashboardMaintenance extends Component {
         if (endDate !== "") {
             const dateFilter = moment(new Date(endDate));
             maintenances = maintenances.filter(maintenance => {
-                const dateMaintenance = moment(new Date(maintenance.data));
+                const dateMaintenance = moment(new Date(maintenance.date));
                 const duration = moment.duration(dateFilter.diff(dateMaintenance));
                 const days = duration.asDays();
                 return (days >= 0) ? maintenance : "";
@@ -59,13 +87,13 @@ export default class DashboardMaintenance extends Component {
 
         for (let i = 0; i < equipments.length; i++) {
             arr.push({
-                equipment: equipments[i].nome,
-                total: maintenances.filter(maintenance => maintenance.equipment === equipments[i].nome),
+                name: equipments[i].name,
+                total: maintenances.filter(maintenance => maintenance.equipment_id === equipments[i].id),
             })
         }
         const totalMaintenances = [], categories = [];
         for (let i = 0; i < arr.length; i++) {
-            categories.push(arr[i].equipment);
+            categories.push(arr[i].name);
             totalMaintenances.push([arr[i].total.length]);
         }
         this.setState({ totalMaintenances, categories })
@@ -117,7 +145,7 @@ export default class DashboardMaintenance extends Component {
         const { categories, totalMaintenances, startDate, endDate, brand, brands, show } = this.state;
 
         const options = {
-            colors: ['#7FFF7F'],
+            colors: ['#31b88a'],
             credits: {
                 enabled: false
             },

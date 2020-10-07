@@ -27,3 +27,19 @@ export const calcularHora = (tempo) => {
     const horas = segundosEmMinutosEmHoras + minutosEmHoras + parseFloat(arr[0]);
     return horas;
 }
+
+export const formatCNPJ = (cnpj) => {
+    const maskedCnpj = String(cnpj)
+    if (maskedCnpj === "undefined") {
+        return cnpj
+    }
+    return maskedCnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"\$1.\$2.\$3\/\$4\-\$5"); 
+}
+
+export const formatCellphone = (number) => {
+    const maskedPhone = String(number);
+    if (maskedPhone === "undefined") {
+        return number
+    }
+    return maskedPhone.replace(/(\d{2})(\d{5})(\d{4})/g,"(\$1)\$2-\$3"); 
+}

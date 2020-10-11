@@ -1,4 +1,4 @@
-import moment from "moment";
+const moment = require("moment");
 
 export const formatDate = (date) => new Date(new Date(date).setDate(new Date(date).getDate() + 1)).toLocaleDateString();
 
@@ -33,7 +33,7 @@ export const formatCNPJ = (cnpj) => {
     if (maskedCnpj === "undefined") {
         return cnpj
     }
-    return maskedCnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"\$1.\$2.\$3\/\$4\-\$5"); 
+    return maskedCnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"$1.$2.$3/$4-$5"); 
 }
 
 export const formatCellphone = (number) => {
@@ -41,5 +41,5 @@ export const formatCellphone = (number) => {
     if (maskedPhone === "undefined") {
         return number
     }
-    return maskedPhone.replace(/(\d{2})(\d{5})(\d{4})/g,"(\$1)\$2-\$3"); 
+    return maskedPhone.replace(/(\d{2})(\d{5})(\d{4})/g,"($1) $2-$3"); 
 }

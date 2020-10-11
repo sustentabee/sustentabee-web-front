@@ -37,14 +37,6 @@ export default class MyCompany extends Component {
             }
         });
 
-        if (nam === "document_number") {
-            this.setState({value: val});
-            this.setState({
-                company: {
-                document_number: val
-                }
-            });
-        }
     }
 
     getAddress = async (zipcode) => {
@@ -142,15 +134,15 @@ export default class MyCompany extends Component {
                                 <Row>
                                     <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>Nome</Form.Label>
-                                        <Form.Control type="text" name="name"   value={company.name} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="text" name="name" value={company.name} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>CNPJ</Form.Label>
-                                        <Form.Control type="text" maxLength="18" name="document_number" value={formatCNPJ(company.document_number)|| ""} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="text" maxLength="18" name="document_number" value={formatCNPJ(company.document_number) || ""} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>Telefone</Form.Label>
-                                        <Form.Control type="text" maxLength="14" name="phone" value={formatCellphone(company.phone)|| ""} onChange={this.myChangeHandler} required />
+                                        <Form.Control type="text" maxLength="14" name="phone" value={formatCellphone(company.phone) || ""} onChange={this.myChangeHandler} required />
                                     </Col>
                                     <Col xs={12} lg={6} className="mb-4">
                                         <Form.Label>CEP</Form.Label>
@@ -207,10 +199,10 @@ export default class MyCompany extends Component {
                                                 <Row>
                                                     <Col xs={12} lg={9}>
                                                         <h6 className="mb-0">{company.name}</h6>
-                                                        <p className="text-muted mb-0 small">CNPJ: {formatCNPJ(company.document_number)}</p>
-                                                        <p className="text-muted mb-0 small">Telefone: {formatCellphone(company.phone)}</p>
+                                                        <p className="text-muted mb-0 small">{formatCellphone(company.phone)} - {formatCNPJ(company.document_number)}</p>
+                                                        <p className="text-muted mb-0 small">{company.address} - {company.neighborhood} - Número {company.number}</p>
                                                         <p className="text-muted mb-0 small">{company.city} - {company.state} - {company.zipcode}</p>
-                                                        <p className="text-muted mb-0 small">Complemento: {company.complement}</p>
+                                                        <p className="text-muted mb-0 small">{company.complement}</p>
                                                     </Col>
                                                     <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
                                                         <BtnAction name={"Editar"} icon={"edit"} action={() => this.edit(company)} />

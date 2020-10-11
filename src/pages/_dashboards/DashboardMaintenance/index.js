@@ -157,7 +157,7 @@ export default class DashboardMaintenance extends Component {
                 text: 'Total de manutenções por equipamento'
             },
             xAxis: { categories: categories, crosshair: true },
-            yAxis: [{ className: 'highcharts-color-0', min: 0, title: { text: '' } }],
+            yAxis: [{ className: 'highcharts-color-0', min: 0, allowDecimals: false, title: { text: '' } }],
             tooltip: {
                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +

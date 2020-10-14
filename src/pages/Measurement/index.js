@@ -4,18 +4,26 @@ import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import CardList from '../../components/CardList';
 import CardListHeader from '../../components/CardListHeader';
-import data from "../../config/data";
-import { formatDate, calcularConsumo, calcularTempo } from "../../config/utils";
+import api from "../../config/api";
 
 export default class Measurement extends Component {
 
     state = {
-        measurements: data.measurements,
+        measurements: [],
+    }
+
+    componentDidMount() {
+        this.getMeasurements();
+    }
+
+    getMeasurements = async () => {
+        const response = await api.get("/measurement");
+        this.setState({ measurements: response.data });
     }
 
     render() {
         const { measurements } = this.state;
-
+        console.log(measurements)
         return (
             <>
                 <Layout>
@@ -25,34 +33,34 @@ export default class Measurement extends Component {
                             <Col xs={12}>
                                 <CardListHeader>
                                     <Row>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Equipamento</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Marca/Modelo</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Data</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Bandeira</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Tempo Registrado</Col>
-                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center">Consumo</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Equipamento</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Marca/Modelo</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Data</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Temperatura (ºC)</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Tensão (V)</Col>
+                                        <Col xs={12} lg={2} className="font-weight-bold d-flex align-items-center text-primary">Potência (W)</Col>
                                     </Row>
                                 </CardListHeader>
-                                {measurements.map((measurement, i) => (
-                                    <CardList key={i}>
+                                {measurements.map((measurement, index) => (
+                                    <CardList key={index}>
                                         <Row>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{measurement.equipment}
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Equipamento:</span>{measurement.name}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{measurement.marca} - {measurement.modelo}
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Marca/Modelo:</span>{measurement.brand} - {measurement.model}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{formatDate(measurement.data)}
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Data:</span>{new Date(measurement.date).toLocaleDateString()}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Bandeira:</span>{measurement.bandeira}
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Temperatura (ºC):</span>{String(measurement.temperature).replace(".", ",")}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Tempo:</span>{calcularTempo(measurement.measurementStart, measurement.measurementEnd)}
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Tensão (V):</span>{measurement.voltage}
                                             </Col>
-                                            <Col xs={12} lg={2} className="d-flex align-items-center small">
-                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Consumo:</span>{calcularConsumo(calcularTempo(measurement.measurementStart, measurement.measurementEnd), measurement.potencia, 1).toFixed(4)} kWh
+                                            <Col xs={12} lg={2} className="d-flex align-items-center small text-muted">
+                                                <span className="d-inline-flex d-lg-none text-success font-weight-bold mr-1">Potência (W):</span>{String(measurement.power).replace(".", ",")}
                                             </Col>
                                         </Row>
                                     </CardList>

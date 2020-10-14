@@ -9,7 +9,7 @@ export default class Footer extends Component {
             <Container className="pb-3 pt-4 small text-center">
                 <Row>
                     <Col xs={12}>
-                        <span className="text-muted">&copy; Sustentabee {new Date().getFullYear()} - All rights reserved.</span>
+                        <span className="text-muted">&copy; Sustentabee {new Date().getFullYear()} - All Rights Reserved.</span>
                     </Col>
                 </Row>
             </Container>

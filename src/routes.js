@@ -6,7 +6,6 @@ import SelectCompany from './pages/SelectCompany';
 import Home from "./pages/Home";
 import Equipment from "./pages/Equipment";
 import EquipmentDashboard from "./pages/EquipmentDashboard";
-import Dashboard from "./pages/Dashboard";
 import Maintenance from "./pages/Maintenance";
 import Measurement from "./pages/Measurement";
 import DashboardAlert from "./pages/_dashboards/DashboardAlert";
@@ -35,12 +34,13 @@ const Routes = () => (
             <PrivateRoute exact path="/minhas-empresas" component={MyCompany} />
             <PrivateRoute exact path="/home" component={Home} />
             <PrivateRoute exact path="/equipamentos" component={Equipment} />
-            <PrivateRoute exact path="/equipamento/:nome/dashboard" component={EquipmentDashboard} />
             <PrivateRoute exact path="/manutencoes" component={Maintenance} />
-            <PrivateRoute exact path="/medicoes" component={Measurement} />
-            <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
             <PrivateRoute exact path="/dashboard-manutencao" component={DashboardMaintenance} />
+
+
+            <PrivateRoute exact path="/equipamento/:id/dashboard" component={EquipmentDashboard} />
+            <PrivateRoute exact path="/medicoes" component={Measurement} />
+            <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
             <PrivateRoute exact path="/dashboard-medicao" component={DashboardMeasurement} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Container, /* Row, Col, Card */ } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { decodeToken } from '../../config/auth';
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
-// import Widget from "../../components/Widget";
+import Widget from "../../components/Widget";
 // import IconPowerBattery from "../../assets/img/power_battery.svg";
-// import IconFreezer from "../../assets/img/freezer.svg";
+import IconFreezer from "../../assets/img/freezer.svg";
+import api from "../../config/api";
 // import Highcharts from 'highcharts';
 // import HighchartsReact from 'highcharts-react-official';
 // import { Link } from 'react-router-dom';
@@ -17,11 +18,22 @@ export default class Home extends Component {
 
     state = {
         user: decodeToken(),
+        equipments: [],
 
+    }
+
+    componentDidMount(){
+        this.getEquipments();
+    }
+
+    getEquipments = async () => {
+        const response = await api.get("/equipment");
+        this.setState({ equipments: response.data });
     }
 
     render() {
         const { user } = this.state.user;
+        const { equipments = [] } = this.state;
 
         // const options = {
         //     colors: ['#7FFF7F', '#333'],
@@ -62,15 +74,15 @@ export default class Home extends Component {
                 <Layout>
                     <Header title={`Bem vindo, ${user.name}`} />
                     <Container fluid>
-                        {/* <Row>
+                       <Row>
                             <Col xs={12} lg={6}>
-                                <Widget icon={IconFreezer} name={"Total de Equipamentos"} value={`${data.equipments.length}`} />
+                                <Widget icon={IconFreezer} name={"Total de Equipamentos"} value={equipments.length} />
                             </Col>
-                            <Col xs={12} lg={6}>
-                                <Widget icon={IconPowerBattery} name={"Consumo no Mês"} value={`${Math.floor(Math.random() * 100000)} kWh`} />
-                            </Col>
+                            {/* <Col xs={12} lg={6}>
+                                <Widget icon={IconPowerBattery} name={"Consumo no Mês"} value={`${0} kWh`} />
+                            </Col> */}
                         </Row>
-                        <Row className="mb-4">
+                         {/* <Row className="mb-4">
                             <Col xs={12} lg={6} className="text-center">
                                 <Card className="border-0 rounded shadow-sm h-100 justify-content-end pr-4">
                                     <Card.Body>

@@ -4,46 +4,71 @@ import Layout from '../../../components/Layout';
 import Header from '../../../components/Header';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import data from "../../../config/data";
 import MaterialIcon from "material-icons-react";
 import Select from 'react-select';
 import moment from "moment";
 import { ExportToCsv } from 'export-to-csv';
-import { calcularTempo, calcularHora, calcularConsumo } from '../../../config/utils';
+import { calcularConsumo, calcularTempo } from '../../../config/utils';
+import api from "../../../config/api";
 
 export default class DashboardMeasurement extends Component {
 
     state = {
         categories: [],
-        totalMeasurements: [],
-        totalHours: [],
         totalConsumo: [],
         startDate: '',
         endDate: '',
-        brands: [{ value: "Brastemp", label: "Brastemp" }, { value: "Consul", label: "Consul" }, { value: "Eletrolux", label: "Eletrolux" }],
+        brands: [],
         brand: [],
         show: false,
+        equipments: []
     }
 
     componentDidMount() {
+        this.getEquipments();
+    }
+
+    getMeasurement = async () => {
+        const response = await api.get("/measurement");
+        this.setState({ measurements: response.data });
         this.createChart();
+    }
+
+    getEquipments = async () => {
+        const response = await api.get("/equipment");
+        this.setState({ equipments: response.data });
+        this.getMeasurement();
+        const brands = [];
+        const { data } = response;
+        for (let i = 0; i < data.length; i++) {
+            let add = true;
+            for (let j = 0; j < brands.length; j++) {
+                if (brands[j].value === data[i].name) {
+                    add = false;
+                }
+            }
+            if (add) {
+                brands.push({ value: data[i].brand, label: data[i].brand })
+            }
+        }
+        this.setState({ brands });
     }
 
     createChart = (brand = this.state.brand, startDate = this.state.startDate, endDate = this.state.endDate) => {
         const arr = [];
-        let { equipments, measurements } = data;
+        let { equipments, measurements } =  this.state;
 
         if (brand !== null) {
             if (brand.length !== 0) {
                 const b = brand.map(item => item.value);
-                equipments = equipments.filter(equipment => b.indexOf(equipment.marca) !== -1)
+                equipments = equipments.filter(equipment => b.indexOf(equipment.brand) !== -1)
             }
         }
 
         if (startDate !== "") {
             const dateFilter = moment(new Date(startDate));
             measurements = measurements.filter(measurement => {
-                const dateMaintenance = moment(new Date(measurement.data));
+                const dateMaintenance = moment(new Date(measurement.created_at));
                 const duration = moment.duration(dateFilter.diff(dateMaintenance));
                 const days = duration.asDays();
                 return (days <= 0) ? measurement : "";
@@ -52,7 +77,7 @@ export default class DashboardMeasurement extends Component {
         if (endDate !== "") {
             const dateFilter = moment(new Date(endDate));
             measurements = measurements.filter(measurement => {
-                const dateMaintenance = moment(new Date(measurement.data));
+                const dateMaintenance = moment(new Date(measurement.date));
                 const duration = moment.duration(dateFilter.diff(dateMaintenance));
                 const days = duration.asDays();
                 return (days >= 0) ? measurement : "";
@@ -61,32 +86,25 @@ export default class DashboardMeasurement extends Component {
 
 
         for (let i = 0; i < equipments.length; i++) {
-            const hours = measurements.map(measurement => (measurement.equipment === equipments[i].nome) ? calcularHora(calcularTempo(measurement.measurementStart, measurement.measurementEnd)) : 0);
-            let totalHours = 0;
-            for (let i = 0; i < hours.length; i++) {
-                totalHours += parseFloat(hours[i]);
-            }
-            const consumo = measurements.map(measurement => (measurement.equipment === equipments[i].nome) ? calcularConsumo(calcularTempo(measurement.measurementStart, measurement.measurementEnd), measurement.potencia, 1) : 0);
+            console.log(equipments.length);
             let totalConsumo = 0;
+            let consumo = measurements.map(measurement => (measurement.name === equipments[i].name) ? calcularConsumo(calcularTempo(measurement.created_at, measurement.updated_at), measurement.power, 1) : 0);
+           
             for (let i = 0; i < consumo.length; i++) {
                 totalConsumo += parseFloat(consumo[i]);
             }
-
+    
             arr.push({
-                equipment: equipments[i].nome,
-                totalMeasurements: measurements.filter(measurement => measurement.equipment === equipments[i].nome),
-                totalHours: totalHours,
-                totalConsumo: totalConsumo
-            });
+                name: equipments[i].name,
+                total: totalConsumo
+            })
         }
-        const totalMeasurements = [], totalHours = [], totalConsumo = [], categories = [];
+        const totalConsumo = [], categories = [];
         for (let i = 0; i < arr.length; i++) {
-            categories.push(arr[i].equipment);
-            totalMeasurements.push([arr[i].totalMeasurements.length]);
-            totalHours.push(arr[i].totalHours);
-            totalConsumo.push(arr[i].totalConsumo);
+            categories.push(arr[i].name);
+            totalConsumo.push(arr[i].total);
         }
-        this.setState({ totalMeasurements, categories, totalHours, totalConsumo })
+        this.setState({ totalConsumo, categories })
     }
 
     filterDate = (event) => {
@@ -106,13 +124,11 @@ export default class DashboardMeasurement extends Component {
     }
 
     export = () => {
-        const { totalMeasurements, totalHours, totalConsumo, categories } = this.state;
+        const { totalConsumo, categories } = this.state;
         const data = [];
         for (let i = 0; i < categories.length; i++) {
             data.push({
                 equipamento: categories[i],
-                total: totalMeasurements[i],
-                horas: totalHours[i],
                 consumo: totalConsumo[i]
             });
         }
@@ -134,7 +150,7 @@ export default class DashboardMeasurement extends Component {
     handleFilter = () => this.setState({ show: !this.state.show });
 
     render() {
-        const { categories, totalMeasurements, totalHours, totalConsumo, startDate, endDate, brand, brands, show } = this.state;
+        const { categories, totalConsumo, startDate, endDate, brand, brands, show } = this.state;
 
         const options = {
             colors: ['#7FFF7F', "#333", "grey"],
@@ -165,9 +181,7 @@ export default class DashboardMeasurement extends Component {
                 }
             },
             series: [
-                { name: "Total de Medições", data: totalMeasurements },
-                { name: "Total de Horas", data: totalHours },
-                { name: "Consumo em kWh", data: totalConsumo },
+                { name: "Consumo", data: totalConsumo },
             ],
             responsive: {
                 rules: [{

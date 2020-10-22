@@ -23,7 +23,6 @@ export default class Measurement extends Component {
 
     render() {
         const { measurements } = this.state;
-        console.log(measurements)
         return (
             <>
                 <Layout>

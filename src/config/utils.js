@@ -16,8 +16,13 @@ export const calcularConsumo = (tempo, potencia, dias) => {
     const minutosEmHoras = (parseFloat(arr[1]) / 60);
     const horas = segundosEmMinutosEmHoras + minutosEmHoras + parseFloat(arr[0]);
     const kWh = (potencia * horas * dias) / 1000;
-    const finalValue = parseFloat(kWh* 0.28551)*100
-    return (isNaN(kWh)) ? 0 : finalValue.toFixed(2);
+    return (isNaN(kWh)) ? 0 : kWh
+}
+
+export const calcularValorConsumo = (consumo) => {
+    const finalValue = parseFloat(consumo* 0.28551);
+    console.log(finalValue.toFixed(2));
+    return finalValue.toFixed(2);
 }
 
 export const calcularHora = (tempo) => {

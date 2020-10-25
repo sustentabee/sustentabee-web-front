@@ -9,6 +9,7 @@ import Alert from '../../components/Alert';
 import EquipmentHome from '../../components/EquipmentHome';
 import io from "socket.io-client";
 import { Link } from "react-router-dom";
+require('dotenv').config();
 
 export default class Home extends Component {
     state = {
@@ -37,7 +38,7 @@ export default class Home extends Component {
     };
 
     registerToSocket = async () => {
-        const socket = io("http://localhost:3333");
+        const socket = io(`${process.env.REACT_APP_API_URL}`);
 
         socket.on("notification", (newNotification) => {
             this.setState({

@@ -1,30 +1,27 @@
-import React, { Component } from 'react';
-import { Container, Row, Col, Card } from "react-bootstrap";
-import { decodeToken } from '../../config/auth';
-import Layout from '../../components/Layout';
-import Header from '../../components/Header';
+import React, { Component } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { decodeToken } from "../../config/auth";
+import Layout from "../../components/Layout";
+import Header from "../../components/Header";
 import Widget from "../../components/Widget";
-import IconFreezer from "../../assets/img/freezer.svg";
 import api from "../../config/api";
-import Highcharts from 'highcharts';
-import moment from "moment";
-import HighchartsReact from 'highcharts-react-official';
-import { calcularConsumo, calcularTempo } from '../../config/utils';
-// import data from "../../config/data";
-// import Alert from '../../components/Alert';
-// import EquipmentHome from '../../components/EquipmentHome';
+import Alert from '../../components/Alert';
+import EquipmentHome from '../../components/EquipmentHome';
+import io from "socket.io-client";
+import { Link } from "react-router-dom";
 
 export default class Home extends Component {
-
     state = {
         user: decodeToken(),
         consumoArr: [],
-        month: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+        month: [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez", ],
         equipments: [],
-
-    }
+        notifications: [],
+    };
 
     componentDidMount() {
+        this.getNotifications();
+        this.registerToSocket();
         this.getEquipments();
         this.getMeasurement();
     }
@@ -32,77 +29,31 @@ export default class Home extends Component {
     getEquipments = async () => {
         const response = await api.get("/equipment");
         this.setState({ equipments: response.data });
-    }
+    };
 
     getMeasurement = async () => {
         const response = await api.get("/measurement");
         this.setState({ measurements: response.data });
-        this.createChart()
-    }
+    };
 
-    createChart = () => {
-        const { measurements, month } = this.state;
-        const arr = [];
-        const consumoArr = []
-        for (let i = 0; i < month.length; i++) {
-            arr.push({
-                month: month[i],
-                data: measurements.filter(item => new Date(item.date).getMonth() === i)
+    registerToSocket = async () => {
+        const socket = io("http://localhost:3333");
+
+        socket.on("notification", (newNotification) => {
+            this.setState({
+                notifications: [newNotification, ...this.state.notifications],
             });
-        }
-        for (let i = 0; i < arr.length; i++) {
-            let total = 0;
-            for (let j = 0; j < arr[i].data.length; j++) {
-                const data = arr[i].data[j];
-                total += calcularConsumo(data.date, data.power, 30)
-            }
-            consumoArr.push(total);
-        }
-        this.setState({ consumoArr });
-    }
+        });
+    };
+
+    getNotifications = async () => {
+        const response = await api.get("/notification");
+        this.setState({ notifications: response.data });
+    };
 
     render() {
         const { user } = this.state.user;
-        const { equipments, consumoArr, month } = this.state;
-
-        const options = {
-            colors: ['#31b88a'],
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Consumo Mensal'
-            },
-            subtitle: {
-                text: ''
-            },
-            xAxis: { categories: month, crosshair: true },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'KWh'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} kWh</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-                name: 'Consumo Mensal',
-                data: consumoArr
-            }]
-            // consumoArr
-        }
+        const { equipments, notifications } = this.state;
 
         return (
             <>
@@ -111,52 +62,60 @@ export default class Home extends Component {
                     <Container fluid>
                         <Row>
                             <Col xs={12} lg={6}>
-                                <Widget icon={IconFreezer} name={"Total de Equipamentos"} value={equipments.length} />
+                                <Widget name={"Total de Equipamentos"} value={equipments.length} />
                             </Col>
-                            {/* <Col xs={12} lg={6}>
-                                <Widget icon={IconPowerBattery} name={"Consumo no Mês"} value={`${0} kWh`} />
-                            </Col> */}
+                            <Col xs={12} lg={6}>
+                                <Widget name={"Consumo no Mês (kWh)"} value={`${0}`} />
+                            </Col>
                         </Row>
-                        {<Row className="mb-4">
+                        <Row className="mb-4">
                             <Col xs={12} lg={6} className="text-center">
-                                <Card className="border-0 rounded shadow-sm h-100 justify-content-end pr-4">
+                                {/* <Card className="border-0 rounded shadow-sm h-100 justify-content-end pr-4">
                                     <Card.Body>
-                                        <HighchartsReact
-                                            highcharts={Highcharts}
-                                            options={options}
-                                        />
-                                        <br />
-                                        {//<Link to={"/dashboard"} className="small mt-2">Ir para Dashboards</Link>
-                                        }
+                                        
                                     </Card.Body>
-                                </Card>
+                                </Card> */}
                             </Col>
-
+                            <Col xs={12} lg={6} className="mt-5 mt-lg-0">
+                                <Row className="mb-3">
+                                    <Col xs={12} className="">
+                                        <h6 className="mb-0">Alertas</h6>
+                                    </Col>
+                                </Row>
+                                <Row className="home-card">
+                                    <Col xs={12} className="">
+                                        {notifications.map((alert, index) => (
+                                            <Alert alert={alert} key={index} />
+                                        ))}
+                                    </Col>
+                                </Row>
+                            </Col>
                         </Row>
-                        /*<Row>
-                            <Col xs={12} className="mb-3">
-                                <h6 className="mb-0">Equipamentos</h6>
+                        <Row className="mb-4">
+                            <Col xs={12} className="d-flex align-items-center justify-content-between mb-3">
+                                <h5 className="mb-2 text-muted">Últimos equipamentos cadastrados</h5>
+                                <Link to={"/equipamentos"} className="small">Ver todos</Link>
                             </Col>
                             <Col xs={12}>
-                                <Card className="border-0 rounded shadow-sm">
-                                    <Card.Body className="home-card">
-                                        {data.equipments.map((equipment, index) => (
-                                            <EquipmentHome equipment={equipment} key={index} />
-                                        ))}
-                                    </Card.Body>
-                                    <Card.Footer className="border-0 bg-white">
-                                        <Row className="py-3">
-                                            <Col xs={12} className="d-flex align-items-center justify-content-end">
-                                                <Link to={"/equipamentos"} className="small">Ver todos</Link>
-                                            </Col>
-                                        </Row>
-                                    </Card.Footer>
-                                </Card>
+                                <Row>
+                                    {equipments.map(
+                                        (equipment, index) => {
+                                            if(index < 6){
+                                                return (
+                                                    <Col xs={12} lg={4} className="mb-4" key={index}>
+                                                        <EquipmentHome equipment={equipment} />
+                                                    </Col>
+                                                )
+                                            }
+                                            return <></>;
+                                        }
+                                    )}
+                                </Row>
                             </Col>
-                        </Row> */}
+                        </Row>
                     </Container>
                 </Layout>
             </>
-        )
+        );
     }
 }

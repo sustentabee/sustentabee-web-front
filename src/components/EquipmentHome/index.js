@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Col, Image } from "react-bootstrap";
+import { Row, Col, Image, Card } from "react-bootstrap";
 import IconFreezer from "../../assets/img/freezer.svg";
 import { Link } from 'react-router-dom';
-import { formatDate } from '../../config/utils';
 
 export default class EquipmentHome extends Component {
 
@@ -10,28 +9,40 @@ export default class EquipmentHome extends Component {
         const { equipment = [] } = this.props;
 
         return (
-            <Row className="border-bottom border-grey py-3">
-                <Col xs={3} lg={1} className="d-flex align-items-center justify-content-start">
-                    <Image src={IconFreezer} width="50" />
-                </Col>
-                <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2">
-                    <div className="d-flex align-items-start justify-content-center flex-column">
-                        <h6 className="mb-0">{equipment.nome}</h6>
-                        <p className="mb-0 small text-muted">Adquirido em: {formatDate(equipment.dataAquisicao)}</p>
-                    </div>
-                </Col>
-                <Col xs={9} lg={4} className="d-flex align-items-center justify-content-start mb-lg-0 mb-2 offset-3 offset-lg-0">
-                    <div className="d-flex align-items-start justify-content-center flex-column">
-                        <h6 className="mb-0">{equipment.marca} - {equipment.modelo}</h6>
-                        <p className="mb-0 small text-muted">Potência: {equipment.potencia}W</p>
-                    </div>
-                </Col>
-                <Col xs={12} lg={3} className="d-flex align-items-center justify-content-end">
-                    <div className="d-flex align-items-start justify-content-center">
-                        <Link to={`equipamento/${equipment.nome}/dashboard`} className="small">Ver equipamento</Link>
-                    </div>
-                </Col>
-            </Row>
+            <Link to={`equipamento/${equipment.id}/dashboard`} style={{ textDecoration: "none" }}>
+                <Card className="border-0 shadow-sm">
+                    <Card.Body>
+                        <Row className="align-items-center">
+                            <Col xs={4}>
+                                <Row>
+                                    <Col xs={12} className="d-flex align-items-center justify-content-center">
+                                        <Image src={IconFreezer} width={80} />
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col xs={8}>
+                                <Row>
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <h6 className="mb-2">{equipment.name}</h6>
+                                    </Col>
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <h6 className="mb-0 small text-muted">{equipment.brand} - {equipment.model}</h6>
+                                    </Col>
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <p className="mb-0 small text-muted">Serial: {equipment.serial}</p>
+                                    </Col>
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <p className="mb-0 small text-muted">Potência: {equipment.potency} W</p>
+                                    </Col>
+                                    <Col xs={12} className="d-flex align-items-center">
+                                        <p className="mb-0 small text-muted">Tensão: {equipment.voltage} V</p>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Link>
         )
     }
 }

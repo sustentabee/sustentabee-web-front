@@ -157,9 +157,14 @@ export default class Home extends Component {
                                 </Row>
                                 <Row className="home-card">
                                     <Col xs={12} className="">
-                                        {notifications.map((alert, index) => (
-                                            <Alert alert={alert} key={index} />
-                                        ))}
+                                        {notifications.map((alert, index) => {
+                                            if (index < 10) {
+                                                return (
+                                                    <Alert alert={alert} key={index} />
+                                                )
+                                            }
+                                            return <></>
+                                        })}
                                     </Col>
                                 </Row>
                             </Col>

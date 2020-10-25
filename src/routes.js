@@ -37,11 +37,11 @@ const Routes = () => (
             <PrivateRoute exact path="/manutencoes" component={Maintenance} />
             <PrivateRoute exact path="/medicoes" component={Measurement} />
             <PrivateRoute exact path="/dashboard-manutencao" component={DashboardMaintenance} />
+            <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
             {/* <PrivateRoute exact path="/dashboard-medicao" component={DashboardMeasurement} /> */}
 
 
             <PrivateRoute exact path="/equipamento/:id/dashboard" component={EquipmentDashboard} />
-            <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>
     </BrowserRouter>

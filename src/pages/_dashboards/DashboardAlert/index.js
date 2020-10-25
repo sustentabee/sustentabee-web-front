@@ -4,45 +4,74 @@ import Layout from '../../../components/Layout';
 import Header from '../../../components/Header';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import data from "../../../config/data";
 import MaterialIcon from "material-icons-react";
 import Select from 'react-select';
 import moment from "moment";
 import { ExportToCsv } from 'export-to-csv';
+import api from "../../../config/api";
 
 export default class DashboardAlert extends Component {
 
     state = {
         categories: [],
-        success: [],
-        warning: [],
-        danger: [],
+        totalAlerts: [],
+        totalAlertsDanger: [],
+        totalAlertsWarning: [],
+        totalAlertsSuccess: [],
         startDate: '',
         endDate: '',
-        brands: [{ value: "Brastemp", label: "Brastemp" }, { value: "Consul", label: "Consul" }, { value: "Eletrolux", label: "Eletrolux" }],
+        brands: [],
         brand: [],
         show: false,
+        equipments: [],
+        alerts: [],
     }
 
     componentDidMount() {
+        this.getEquipments();
+    }
+
+    getAlerts = async () => {
+        const response = await api.get("/notification");
+        this.setState({ alerts: response.data });
         this.createChart();
+    }
+
+    getEquipments = async () => {
+        const response = await api.get("/equipment");
+        this.setState({ equipments: response.data });
+        this.getAlerts();
+        const brands = [];
+        const { data } = response;
+        for (let i = 0; i < data.length; i++) {
+            let add = true;
+            for (let j = 0; j < brands.length; j++) {
+                if (brands[j].value === data[i].name) {
+                    add = false;
+                }
+            }
+            if (add) {
+                brands.push({ value: data[i].brand, label: data[i].brand })
+            }
+        }
+        this.setState({ brands });
     }
 
     createChart = (brand = this.state.brand, startDate = this.state.startDate, endDate = this.state.endDate) => {
         const arr = [];
-        let { equipments, alerts } = data;
+        let { equipments, alerts } = this.state;
 
         if (brand !== null) {
             if (brand.length !== 0) {
                 const b = brand.map(item => item.value);
-                equipments = equipments.filter(equipment => b.indexOf(equipment.marca) !== -1)
+                equipments = equipments.filter(equipment => b.indexOf(equipment.brand) !== -1)
             }
         }
 
         if (startDate !== "") {
             const dateFilter = moment(new Date(startDate));
             alerts = alerts.filter(alert => {
-                const dateAlert = moment(new Date(alert.data));
+                const dateAlert = moment(new Date(alert.created_at));
                 const duration = moment.duration(dateFilter.diff(dateAlert));
                 const days = duration.asDays();
                 return (days <= 0) ? alert : "";
@@ -51,7 +80,7 @@ export default class DashboardAlert extends Component {
         if (endDate !== "") {
             const dateFilter = moment(new Date(endDate));
             alerts = alerts.filter(alert => {
-                const dateAlert = moment(new Date(alert.data));
+                const dateAlert = moment(new Date(alert.created_at));
                 const duration = moment.duration(dateFilter.diff(dateAlert));
                 const days = duration.asDays();
                 return (days >= 0) ? alert : "";
@@ -61,20 +90,19 @@ export default class DashboardAlert extends Component {
 
         for (let i = 0; i < equipments.length; i++) {
             arr.push({
-                equipment: equipments[i].nome,
-                alertsSuccess: alerts.filter(alert => alert.equipment === equipments[i].nome && alert.variant === "success"),
-                alertsWarning: alerts.filter(alert => alert.equipment === equipments[i].nome && alert.variant === "warning"),
-                alertsDanger: alerts.filter(alert => alert.equipment === equipments[i].nome && alert.variant === "danger"),
+                name: equipments[i].name,
+                total: alerts.filter(alert => alert.equipment_id === equipments[i].id),
             })
         }
-        const success = [], warning = [], danger = [], categories = [];
+        const totalAlerts = [], totalAlertsDanger = [], totalAlertsWarning = [], totalAlertsSuccess = [], categories = [];
         for (let i = 0; i < arr.length; i++) {
-            categories.push(arr[i].equipment);
-            success.push([arr[i].alertsSuccess.length]);
-            warning.push([arr[i].alertsWarning.length]);
-            danger.push([arr[i].alertsDanger.length]);
+            categories.push(arr[i].name);
+            totalAlerts.push(arr[i].total.length);
+            totalAlertsDanger.push(arr[i].total.filter(item => item.type === "danger").length);
+            totalAlertsWarning.push(arr[i].total.filter(item => item.type === "warning").length);
+            totalAlertsSuccess.push(arr[i].total.filter(item => item.type === "success").length);
         }
-        this.setState({ success, warning, danger, categories })
+        this.setState({ totalAlerts, totalAlertsDanger, totalAlertsWarning, totalAlertsSuccess, categories })
     }
 
     filterDate = (event) => {
@@ -94,14 +122,15 @@ export default class DashboardAlert extends Component {
     }
 
     export = () => {
-        const { success, warning, danger, categories } = this.state;
+        const { totalAlerts, totalAlertsDanger, totalAlertsWarning, totalAlertsSuccess, categories } = this.state;
         const data = [];
         for (let i = 0; i < categories.length; i++) {
             data.push({
                 equipamento: categories[i],
-                alertas_bons: success[i],
-                alertas_atencao: warning[i],
-                alertas_urgentes: danger[i]
+                total: totalAlerts[i],
+                danger: totalAlertsDanger[i],
+                warning: totalAlertsWarning[i],
+                success: totalAlertsSuccess[i],
             });
         }
         const options = {
@@ -122,22 +151,22 @@ export default class DashboardAlert extends Component {
     handleFilter = () => this.setState({ show: !this.state.show });
 
     render() {
-        const { categories, success, warning, danger, startDate, endDate, brand, brands, show } = this.state;
+        const { categories, totalAlerts, totalAlertsDanger, totalAlertsWarning, totalAlertsSuccess, startDate, endDate, brand, brands, show } = this.state;
 
         const options = {
-            colors: ['#0A0', 'rgb(255, 140, 0)', '#A00'],
+            colors: ['#31b88a', "#A00", "rgb(255, 140, 0)", "#0A0"],
             credits: {
                 enabled: false
             },
             chart: {
                 type: 'bar',
-                height: '60%'
+                height: '50%'
             },
             title: {
                 text: 'Total de alertas por equipamento'
             },
             xAxis: { categories: categories, crosshair: true },
-            yAxis: [{ className: 'highcharts-color-0', min: 0, title: { text: '' } }],
+            yAxis: [{ className: 'highcharts-color-0', min: 0, allowDecimals: false, title: { text: '' } }],
             tooltip: {
                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
@@ -153,9 +182,10 @@ export default class DashboardAlert extends Component {
                 }
             },
             series: [
-                { name: "Bom", data: success },
-                { name: "Atenção", data: warning },
-                { name: "Urgente", data: danger }
+                { name: "Total", data: totalAlerts },
+                { name: "Urgente", data: totalAlertsDanger },
+                { name: "Atenção", data: totalAlertsWarning },
+                { name: "Bom", data: totalAlertsSuccess },
             ],
 
             responsive: {
@@ -170,7 +200,6 @@ export default class DashboardAlert extends Component {
                     }
                 }]
             }
-
         }
 
         return (

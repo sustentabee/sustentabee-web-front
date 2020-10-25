@@ -50,7 +50,7 @@ export default class Home extends Component {
             for (let j = 0; j < items.length; j++) {
                 total += items[j].consumption;
             }
-            dataChart.push(total);
+            dataChart.push(parseInt(total));
             dataChartPrice.push(total * 0.518);
         }
         this.setState({ dataChart, dataChartPrice });
@@ -135,7 +135,7 @@ export default class Home extends Component {
                                 <Widget name={"Total de Equipamentos"} value={equipments.length} />
                             </Col>
                             <Col xs={12} lg={6}>
-                                <Widget name={"Consumo no Mês (kWh)"} value={`${parseFloat(dataChart[new Date().getMonth()]).toFixed(2)}`} />
+                                <Widget name={"Consumo no Mês (kWh)"} value={`${dataChart[new Date().getMonth()]}`} />
                             </Col>
                         </Row>
                         <Row className="mb-4">
@@ -163,7 +163,7 @@ export default class Home extends Component {
                                                     <Alert alert={alert} key={index} />
                                                 )
                                             }
-                                            return <></>
+                                            return null;
                                         })}
                                     </Col>
                                 </Row>
@@ -185,7 +185,7 @@ export default class Home extends Component {
                                                     </Col>
                                                 )
                                             }
-                                            return <></>;
+                                            return null;
                                         }
                                     )}
                                 </Row>

@@ -10,7 +10,7 @@ import Maintenance from "./pages/Maintenance";
 import Measurement from "./pages/Measurement";
 import DashboardAlert from "./pages/_dashboards/DashboardAlert";
 import DashboardMaintenance from "./pages/_dashboards/DashboardMaintenance";
-// import DashboardMeasurement from "./pages/_dashboards/DashboardMeasurement";
+import DashboardMeasurement from "./pages/_dashboards/DashboardMeasurement";
 import MyCompany from "./pages/MyCompany";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -38,7 +38,7 @@ const Routes = () => (
             <PrivateRoute exact path="/medicoes" component={Measurement} />
             <PrivateRoute exact path="/dashboard-manutencao" component={DashboardMaintenance} />
             <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
-            {/* <PrivateRoute exact path="/dashboard-medicao" component={DashboardMeasurement} /> */}
+            <PrivateRoute exact path="/dashboard-medicao" component={DashboardMeasurement} />
 
 
             <PrivateRoute exact path="/equipamento/:id/dashboard" component={EquipmentDashboard} />

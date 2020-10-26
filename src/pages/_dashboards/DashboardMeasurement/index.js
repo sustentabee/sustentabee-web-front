@@ -95,9 +95,10 @@ export default class DashboardMeasurement extends Component {
             categories.push(arr[i].name);
             let total = 0;
             for (let j = 0; j < arr[i].total.length; j++) {
-                total += arr[i].total[j].consumption;
+                total += arr[i].total[j].power;
             }
-            totalMeasurements.push(parseInt(total));
+            const consumption = (((parseFloat(total) / arr[i].total.length) * 720) / 1000);
+            totalMeasurements.push(isNaN(consumption) ? 0 : parseInt(consumption));
         }
         this.setState({ totalMeasurements, categories })
     }
@@ -133,7 +134,7 @@ export default class DashboardMeasurement extends Component {
             decimalSeparator: '.',
             showLabels: true,
             showTitle: true,
-            title: 'Total de manutenções por equipamento',
+            title: 'Total de medições por equipamento',
             useTextFile: false,
             useBom: true,
             useKeysAsHeaders: true
@@ -157,7 +158,7 @@ export default class DashboardMeasurement extends Component {
                 height: '50%'
             },
             title: {
-                text: 'Total de consumo por equipamento'
+                text: 'Total de consumo por equipamento (kWh)'
             },
             xAxis: { categories: categories, crosshair: true },
             yAxis: [{ className: 'highcharts-color-0', min: 0, allowDecimals: false, title: { text: '' } }],

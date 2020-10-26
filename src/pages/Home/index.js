@@ -48,10 +48,11 @@ export default class Home extends Component {
             const items = measurements.filter(item => new Date(item.date).getMonth() === i && new Date(item.date).getFullYear() === new Date().getFullYear());
             let total = 0;
             for (let j = 0; j < items.length; j++) {
-                total += items[j].consumption;
+                total += items[j].power;
             }
-            dataChart.push(parseInt(total));
-            dataChartPrice.push(total * 0.518);
+            const consumption = (((parseFloat(total) / items.length) * 720) / 1000);
+            dataChart.push((isNaN(consumption)) ? 0 : parseInt(consumption));
+            dataChartPrice.push(consumption * 0.518);
         }
         this.setState({ dataChart, dataChartPrice });
     }
@@ -73,7 +74,7 @@ export default class Home extends Component {
 
     render() {
         const { user } = this.state.user;
-        const { equipments, notifications, month, dataChart, /* dataChartPrice */ } = this.state;
+        const { equipments, notifications, month, dataChart, dataChartPrice } = this.state;
 
         const options = {
             colors: ['#31b88a', '#333'],
@@ -118,10 +119,10 @@ export default class Home extends Component {
                     name: 'Consumo Total (kWh)',
                     data: dataChart
                 },
-                // {
-                //     name: 'Custo Estimado (R$)',
-                //     data: dataChartPrice
-                // }
+                {
+                    name: 'Custo Estimado (R$)',
+                    data: dataChartPrice
+                }
             ]
         }
 

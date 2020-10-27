@@ -2,30 +2,83 @@ import React, { Component } from 'react';
 import { Container, Row, Col, Card, Table, Image } from "react-bootstrap";
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
-import { Link } from 'react-router-dom';
-import HighchartsReact from 'highcharts-react-official';
-import Highcharts from 'highcharts';
 import Widget from '../../components/Widget';
 import CardList from '../../components/CardList';
 import IconPowerBattery from "../../assets/img/power_battery.svg";
 import IconFreezer from "../../assets/img/freezer.svg";
-import data from "../../config/data";
-import { formatDate } from "../../config/utils";
 import Alert from '../../components/Alert';
+import api from '../../config/api';
+import io from "socket.io-client";
+import { Link } from "react-router-dom";
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+require('dotenv').config();
 
 export default class EquipmentDashboard extends Component {
 
     state = {
         equipment: [],
-        alerts: [],
+        month: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez",],
+        notifications: [],
+        dataChart: [],
+        dataChartPrice: [],
     }
 
     componentDidMount() {
-        const { nome = "" } = this.props.match.params;
-        const [equipment] = data.equipments.filter(equipment => equipment.nome === nome);
-        const alerts = data.alerts.filter(equipment => equipment.equipment === nome);
-        this.setState({ equipment, alerts });
+        this.getEquipment();
+        this.getMeasurement();   
+        this.registerToSocket();
     }
+
+    getEquipment = async () => {
+        const { id } = this.props.match.params;
+        const response = await api.get(`/equipment/${id}`);
+        this.setState({ equipment: response.data });
+        this.getNotifications();
+    }
+
+    getMeasurement = async () => {
+        const { id } = this.props.match.params;
+        const response = await api.get(`/measurement/${id}`);
+        this.setState({ measurements: response.data});
+        this.createChart();
+    };
+
+    createChart = () => {
+        const { measurements = [], month } = this.state;
+        const dataChart = [], dataChartPrice = [];
+        for (let i = 0; i < month.length; i++) {
+            const items = measurements.filter(item => new Date(item.date).getMonth() === i && new Date(item.date).getFullYear() === new Date().getFullYear());
+            let total = 0;
+            for (let j = 0; j < items.length; j++) {
+                total += items[j].power;
+            }
+            const consumption = (((parseFloat(total) / items.length) * 720) / 1000);
+            dataChart.push((isNaN(consumption)) ? 0 : parseInt(consumption));
+            dataChartPrice.push(consumption * 0.518);
+        }
+        this.setState({ dataChart, dataChartPrice });
+    }
+
+    registerToSocket = async () => {
+        const socket = io(`${process.env.REACT_APP_API_URL}`);
+        
+        socket.on("notification", (newNotification) => {
+            const { equipment } = this.state;
+            if(newNotification.serial === parseInt(equipment.serial)){
+                this.setState({
+                    notifications: [newNotification, ...this.state.notifications],
+                });
+            } 
+        });
+    };
+
+    getNotifications = async () => {
+        const { equipment } = this.state;
+        const response = await api.get("/notification");
+        const { data = [] } = response;
+        this.setState({ notifications: data.filter(item => item.serial === equipment.serial) });
+    };
 
     generateColor = value => {
         if (value === "-") {
@@ -55,20 +108,36 @@ export default class EquipmentDashboard extends Component {
     }
 
     render() {
-        const { equipment = [], alerts = [] } = this.state;
+        const { equipment, notifications, month, dataChart, dataChartPrice } = this.state;
 
         const options = {
-            colors: ['#7FFF7F', '#333'],
-            chart: { type: 'line' },
-            title: {
-                text: 'Consumo x Economia de Energia'
+            colors: ['#31b88a', '#333333'],
+            credits: {
+                enabled: false
             },
-            xAxis: { categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], crosshair: true },
-            yAxis: [{ className: 'highcharts-color-0', min: 0, title: { text: '' } }],
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Consumo Total (kWh)'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: month,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
             tooltip: {
                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b> {point.y} kWh</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -81,12 +150,12 @@ export default class EquipmentDashboard extends Component {
             },
             series: [
                 {
-                    name: "Consumo de Energia",
-                    data: [Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000)]
+                    name: 'Consumo Total (kWh)',
+                    data: dataChart
                 },
                 {
-                    name: "Economia de Energia",
-                    data: [Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000), Math.floor(Math.random() * 10000)]
+                    name: 'Custo Estimado (R$)',
+                    data: dataChartPrice
                 }
             ]
         }
@@ -105,7 +174,7 @@ export default class EquipmentDashboard extends Component {
                     :
                     <>
                         <Layout>
-                            <Header title={equipment.nome} />
+                            <Header title={equipment.name} />
                             <Container fluid>
                                 <Row className="mb-3">
                                     <Col xs={12}>
@@ -118,35 +187,31 @@ export default class EquipmentDashboard extends Component {
                                                     <Row>
                                                         <Col xs={6} lg={3}>
                                                             <h6 className="small mb-0 text-muted">Nome</h6>
-                                                            <p className="font-weight-bold">{equipment.nome}</p>
+                                                            <p className="font-weight-bold">{equipment.name}</p>
                                                         </Col>
                                                         <Col xs={6} lg={3}>
                                                             <h6 className="small mb-0 text-muted">Data de Aquisição</h6>
-                                                            <p className="font-weight-bold">{formatDate(equipment.dataAquisicao)}</p>
+                                                            <p className="font-weight-bold">{new Date(equipment.dateAcquisition).toLocaleDateString()}</p>
                                                         </Col>
                                                         <Col xs={6} lg={3}>
-                                                            <h6 className="small mb-0 text-muted">Dispositivo de Medição</h6>
-                                                            <p className="font-weight-bold">{equipment.dM}</p>
+                                                            <h6 className="small mb-0 text-muted">Marca</h6>
+                                                            <p className="font-weight-bold">{equipment.brand}</p>
+                                                        </Col>
+                                                        <Col xs={6} lg={3}>
+                                                            <h6 className="small mb-0 text-muted">Modelo</h6>
+                                                            <p className="font-weight-bold">{equipment.model}</p>
                                                         </Col>
                                                         <Col xs={6} lg={3}>
                                                             <h6 className="small mb-0 text-muted">Serial</h6>
                                                             <p className="font-weight-bold">{equipment.serial}</p>
                                                         </Col>
                                                         <Col xs={6} lg={3}>
-                                                            <h6 className="small mb-0 text-muted">Marca</h6>
-                                                            <p className="font-weight-bold">{equipment.marca}</p>
-                                                        </Col>
-                                                        <Col xs={6} lg={3}>
-                                                            <h6 className="small mb-0 text-muted">Modelo</h6>
-                                                            <p className="font-weight-bold">{equipment.modelo}</p>
-                                                        </Col>
-                                                        <Col xs={6} lg={3}>
                                                             <h6 className="small mb-0 text-muted">Potência</h6>
-                                                            <p className="font-weight-bold">{equipment.potencia}W</p>
+                                                            <p className="font-weight-bold">{equipment.potency}W</p>
                                                         </Col>
                                                         <Col xs={6} lg={3}>
                                                             <h6 className="small mb-0 text-muted">Tensão</h6>
-                                                            <p className="font-weight-bold">{equipment.tensao}v</p>
+                                                            <p className="font-weight-bold">{equipment.voltage}V</p>
                                                         </Col>
                                                     </Row>
                                                 </Col>
@@ -156,10 +221,10 @@ export default class EquipmentDashboard extends Component {
                                 </Row>
                                 <Row>
                                     <Col xs={12} lg={6}>
-                                        <Widget icon={IconPowerBattery} name={"Consumo no Mês"} value={`${Math.floor(Math.random() * 1000)} kWh`} />
+                                        <Widget name={"Consumo no Mês (kWh)"} value={`${dataChart[new Date().getMonth()]}`} />
                                     </Col>
                                     <Col xs={12} lg={6}>
-                                        <Widget icon={IconPowerBattery} name={"Consumo no Ano"} value={`${Math.floor(Math.random() * 100000)} kWh`} />
+                                        <Widget name={"Custo no Mês (R$)"} value={`${parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2)}`} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-4">
@@ -175,15 +240,20 @@ export default class EquipmentDashboard extends Component {
                                     </Col>
                                     <Col xs={12} lg={6} className="mt-5 mt-lg-0">
                                         <Row className="mb-3">
-                                            <Col xs={12}>
+                                            <Col xs={12} className="">
                                                 <h6 className="mb-0">Alertas</h6>
                                             </Col>
                                         </Row>
                                         <Row className="home-card">
-                                            <Col xs={12}>
-                                                {alerts.map((alert, index) => (
-                                                    <Alert alert={alert} key={index} />
-                                                ))}
+                                            <Col xs={12} className="">
+                                                {notifications.map((alert, index) => {
+                                                    if (index < 10) {
+                                                        return (
+                                                            <Alert alert={alert} key={index} />
+                                                        )
+                                                    }
+                                                    return null;
+                                                })}
                                             </Col>
                                         </Row>
                                     </Col>

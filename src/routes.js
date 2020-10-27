@@ -34,14 +34,12 @@ const Routes = () => (
             <PrivateRoute exact path="/minhas-empresas" component={MyCompany} />
             <PrivateRoute exact path="/home" component={Home} />
             <PrivateRoute exact path="/equipamentos" component={Equipment} />
+            <PrivateRoute exact path="/equipamento/:id/dashboard" component={EquipmentDashboard} />
             <PrivateRoute exact path="/manutencoes" component={Maintenance} />
             <PrivateRoute exact path="/medicoes" component={Measurement} />
             <PrivateRoute exact path="/dashboard-manutencao" component={DashboardMaintenance} />
             <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
             <PrivateRoute exact path="/dashboard-medicao" component={DashboardMeasurement} />
-
-
-            <PrivateRoute exact path="/equipamento/:id/dashboard" component={EquipmentDashboard} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>
     </BrowserRouter>

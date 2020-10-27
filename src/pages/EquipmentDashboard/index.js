@@ -224,7 +224,7 @@ export default class EquipmentDashboard extends Component {
                                         <Widget name={"Consumo no Mês (kWh)"} value={`${dataChart[new Date().getMonth()]}`} />
                                     </Col>
                                     <Col xs={12} lg={6}>
-                                        <Widget name={"Custo no Mês (R$)"} value={`${parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2)}`} />
+                                        <Widget name={"Custo no Mês (R$)"} value={`${(!isNaN(parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2))) ? parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2) : 0}`} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-4">

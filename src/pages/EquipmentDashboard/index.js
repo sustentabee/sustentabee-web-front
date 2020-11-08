@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import Widget from '../../components/Widget';
 import CardList from '../../components/CardList';
-import IconPowerBattery from "../../assets/img/power_battery.svg";
+// import IconPowerBattery from "../../assets/img/power_battery.svg";
 import IconFreezer from "../../assets/img/freezer.svg";
 import Alert from '../../components/Alert';
 import api from '../../config/api';
@@ -22,11 +22,12 @@ export default class EquipmentDashboard extends Component {
         notifications: [],
         dataChart: [],
         dataChartPrice: [],
+        m1: [], m2: [], m3: [], m4: [], m5: [], m6: [], m7: [], m8: [], m9: [], m10: [], m11: [], m12: [],
     }
 
     componentDidMount() {
         this.getEquipment();
-        this.getMeasurement();   
+        this.getMeasurement();
         this.registerToSocket();
     }
 
@@ -40,8 +41,9 @@ export default class EquipmentDashboard extends Component {
     getMeasurement = async () => {
         const { id } = this.props.match.params;
         const response = await api.get(`/measurement/${id}`);
-        this.setState({ measurements: response.data});
+        this.setState({ measurements: response.data });
         this.createChart();
+        this.generateMaph();
     };
 
     createChart = () => {
@@ -62,14 +64,14 @@ export default class EquipmentDashboard extends Component {
 
     registerToSocket = async () => {
         const socket = io(`${process.env.REACT_APP_API_URL}`);
-        
+
         socket.on("notification", (newNotification) => {
             const { equipment } = this.state;
-            if(newNotification.serial === parseInt(equipment.serial)){
+            if (newNotification.serial === parseInt(equipment.serial)) {
                 this.setState({
                     notifications: [newNotification, ...this.state.notifications],
                 });
-            } 
+            }
         });
     };
 
@@ -80,8 +82,38 @@ export default class EquipmentDashboard extends Component {
         this.setState({ notifications: data.filter(item => item.serial === equipment.serial) });
     };
 
+    generateMaph = () => {
+        const m1 = [], m2 = [], m3 = [], m4 = [], m5 = [], m6 = [], m7 = [], m8 = [], m9 = [], m10 = [], m11 = [], m12 = [];
+        const { measurements = [] } = this.state;
+        for (let i = 0; i < 31; i++) {
+            m1.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 0)));
+            m2.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 1)));
+            m3.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 2)));
+            m4.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 3)));
+            m5.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 4)));
+            m6.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 5)));
+            m7.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 6)));
+            m8.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 7)));
+            m9.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 8)));
+            m10.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 9)));
+            m11.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 10)));
+            m12.push(this.calcularConsumo(measurements.filter(item => new Date(item.date).getDate() === i && new Date(item.date).getMonth() === 11)));
+        }
+        console.log(measurements)
+        this.setState({ m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12 })
+    }
+
+    calcularConsumo = (items) => {
+        let total = 0;
+        for (let j = 0; j < items.length; j++) {
+            total += items[j].power;
+        }
+        const consumption = (((parseFloat(total) / items.length) * 720) / 1000);
+        return (isNaN(consumption)) ? 0 : parseInt(consumption);
+    }
+
     generateColor = value => {
-        if (value === "-") {
+        if (value === "-" || value === 0 || value === undefined) {
             return "#fff";
         }
         else if (value > 900) {
@@ -108,7 +140,7 @@ export default class EquipmentDashboard extends Component {
     }
 
     render() {
-        const { equipment, notifications, month, dataChart, dataChartPrice } = this.state;
+        const { equipment, notifications, month, dataChart, dataChartPrice, m1 = [], m2 = [], m3 = [], m4 = [], m5 = [], m6 = [], m7 = [], m8 = [], m9 = [], m10 = [], m11 = [], m12 = [] } = this.state;
 
         const options = {
             colors: ['#31b88a', '#333333'],
@@ -284,53 +316,21 @@ export default class EquipmentDashboard extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {[
-                                                    { day: "01", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "02", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "03", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "04", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "05", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "06", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "07", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "08", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "09", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "10", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "11", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "12", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "13", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "14", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "15", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "16", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "17", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "18", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "19", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "20", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "21", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "22", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "23", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "24", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "25", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "26", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "27", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "28", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "29", jan: Math.floor(Math.random() * 1000), fev: "-", mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "30", jan: Math.floor(Math.random() * 1000), fev: "-", mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
-                                                    { day: "31", jan: Math.floor(Math.random() * 1000), fev: "-", mar: Math.floor(Math.random() * 1000), abr: "-", mai: Math.floor(Math.random() * 1000), jun: "-", jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: "-", out: Math.floor(Math.random() * 1000), nov: "-", dez: Math.floor(Math.random() * 1000) },
-                                                ].map((item, index) => (
+                                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30].map((item, index) => (
                                                     <tr key={index}>
-                                                        <th className="border-0 py-2">{item.day}</th>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.jan) }}>{(item.jan !== "-") ? <strong>{item.jan} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.fev) }}>{(item.fev !== "-") ? <strong>{item.fev} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.mar) }}>{(item.mar !== "-") ? <strong>{item.mar} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.abr) }}>{(item.abr !== "-") ? <strong>{item.abr} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.mai) }}>{(item.mai !== "-") ? <strong>{item.mai} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.jun) }}>{(item.jun !== "-") ? <strong>{item.jun} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.jul) }}>{(item.jul !== "-") ? <strong>{item.jul} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.ago) }}>{(item.ago !== "-") ? <strong>{item.ago} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.set) }}>{(item.set !== "-") ? <strong>{item.set} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.out) }}>{(item.out !== "-") ? <strong>{item.out} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.nov) }}>{(item.nov !== "-") ? <strong>{item.nov} kWh</strong> : "-"}</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.dez) }}>{(item.dez !== "-") ? <strong>{item.dez} kWh</strong> : "-"}</td>
+                                                        <th className="border-0 py-2">{item+1}</th>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m1[item]) }}>{m1[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m2[item]) }}>{m2[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m3[item]) }}>{m3[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m4[item]) }}>{m4[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m5[item]) }}>{m5[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m6[item]) }}>{m6[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m7[item]) }}>{m7[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m8[item]) }}>{m8[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m9[item]) }}>{m9[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m10[item]) }}>{m10[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m11[item]) }}>{m11[item]} kWh</td>
+                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m12[item]) }}>{m12[item]} kWh</td>
                                                     </tr>
                                                 ))}
                                             </tbody>

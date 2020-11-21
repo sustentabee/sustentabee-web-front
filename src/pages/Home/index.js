@@ -52,7 +52,7 @@ export default class Home extends Component {
             }
             const consumption = (((parseFloat(total) / items.length) * 720) / 1000);
             dataChart.push((isNaN(consumption)) ? 0 : parseInt(consumption));
-            dataChartPrice.push(consumption * 0.518);
+            dataChartPrice.push(consumption * 0.8);
         }
         this.setState({ dataChart, dataChartPrice });
     }

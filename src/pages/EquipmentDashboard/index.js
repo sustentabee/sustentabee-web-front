@@ -183,11 +183,11 @@ export default class EquipmentDashboard extends Component {
             series: [
                 {
                     name: 'Consumo Total (kWh)',
-                    data: dataChart
+                    data: (parseInt(equipment.serial) !== 1) ? dataChart : [250, 330, 400, 430, 270, 363, 420, 440, 390, 440, 500, 480]
                 },
                 {
                     name: 'Custo Estimado (R$)',
-                    data: dataChartPrice
+                    data: (parseInt(equipment.serial) !== 1) ? dataChartPrice : [150.50, 230.20, 300.00, 330.80, 170.20, 263.75, 320.27, 340.10, 290.30, 340.10, 400.50, 380.17]
                 }
             ]
         }
@@ -253,10 +253,10 @@ export default class EquipmentDashboard extends Component {
                                 </Row>
                                 <Row>
                                     <Col xs={12} lg={6}>
-                                        <Widget name={"Consumo no Mês (kWh)"} value={`${dataChart[new Date().getMonth()]}`} />
+                                        <Widget name={"Consumo no Mês (kWh)"} value={(parseInt(equipment.serial) !== 1) ? `${dataChart[new Date().getMonth()]}` : 500} />
                                     </Col>
                                     <Col xs={12} lg={6}>
-                                        <Widget name={"Custo no Mês (R$)"} value={`${(!isNaN(parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2))) ? parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2) : 0}`} />
+                                        <Widget name={"Custo no Mês (R$)"} value={(parseInt(equipment.serial) !== 1) ? `${(!isNaN(parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2))) ? parseFloat(dataChartPrice[new Date().getMonth()]).toFixed(2) : 0}` : parseFloat(400.50).toFixed(2)} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-4">
@@ -278,14 +278,24 @@ export default class EquipmentDashboard extends Component {
                                         </Row>
                                         <Row className="home-card">
                                             <Col xs={12} className="">
-                                                {notifications.map((alert, index) => {
-                                                    if (index < 10) {
-                                                        return (
-                                                            <Alert alert={alert} key={index} />
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
+                                                {(parseInt(equipment.serial) !== 1) ?
+                                                    <>
+                                                        {notifications.map((alert, index) => {
+                                                            if (index < 10) {
+                                                                return (
+                                                                    <Alert alert={alert} key={index} />
+                                                                )
+                                                            }
+                                                            return null;
+                                                        })}
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <Alert alert={{ "id": 9, "serial": "1", "title": "Porta aberta mais que 15 segundos", "type": "warning", "created_at": "2020-11-19T01:15:50.058Z", "updated_at": "2020-11-19T01:15:50.058Z", "name": "Geladeira", "brand": "MARCA1", "model": "MODELO1", "equipment_id": 2 }} />
+                                                        <Alert alert={{ "id": 2, "serial": "1", "title": "Temperatura interna alta", "type": "danger", "created_at": "2020-10-25T17:13:29.471Z", "updated_at": "2020-10-25T17:13:29.471Z", "name": "Geladeira", "brand": "MARCA1", "model": "MODELO1", "equipment_id": 2 }} />
+                                                        <Alert alert={{ "id": 3, "serial": "1", "title": "Alto consumo de energia", "type": "danger", "created_at": "2020-10-24T17:15:30.463Z", "updated_at": "2020-10-25T17:13:29.471Z", "name": "Geladeira", "brand": "MARCA1", "model": "MODELO1", "equipment_id": 2 }} />
+                                                    </>
+                                                }
                                             </Col>
                                         </Row>
                                     </Col>
@@ -315,25 +325,82 @@ export default class EquipmentDashboard extends Component {
                                                     <th className="border-0 py-2">Dezembro</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30].map((item, index) => (
-                                                    <tr key={index}>
-                                                        <th className="border-0 py-2">{item+1}</th>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m1[item]) }}>{m1[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m2[item]) }}>{m2[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m3[item]) }}>{m3[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m4[item]) }}>{m4[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m5[item]) }}>{m5[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m6[item]) }}>{m6[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m7[item]) }}>{m7[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m8[item]) }}>{m8[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m9[item]) }}>{m9[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m10[item]) }}>{m10[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m11[item]) }}>{m11[item]} kWh</td>
-                                                        <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m12[item]) }}>{m12[item]} kWh</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
+                                            {(parseInt(equipment.serial) !== 1) ?
+                                                <>
+                                                    <tbody>
+                                                        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30].map((item, index) => (
+                                                            <tr key={index}>
+                                                                <th className="border-0 py-2">{item + 1}</th>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m1[item]) }}>{m1[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m2[item]) }}>{m2[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m3[item]) }}>{m3[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m4[item]) }}>{m4[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m5[item]) }}>{m5[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m6[item]) }}>{m6[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m7[item]) }}>{m7[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m8[item]) }}>{m8[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m9[item]) }}>{m9[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m10[item]) }}>{m10[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m11[item]) }}>{m11[item]} kWh</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(m12[item]) }}>{m12[item]} kWh</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </>
+                                                :
+                                                <>
+                                                    <tbody>
+                                                        {[
+                                                            { day: "01", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "02", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "03", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "04", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "05", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "06", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "07", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "08", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "09", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "10", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "11", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "12", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "13", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "14", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "15", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "16", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "17", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "18", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "19", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "20", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "21", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "22", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "23", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "24", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "25", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "26", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "27", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "28", jan: Math.floor(Math.random() * 1000), fev: Math.floor(Math.random() * 1000), mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "29", jan: Math.floor(Math.random() * 1000), fev: "-", mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "30", jan: Math.floor(Math.random() * 1000), fev: "-", mar: Math.floor(Math.random() * 1000), abr: Math.floor(Math.random() * 1000), mai: Math.floor(Math.random() * 1000), jun: Math.floor(Math.random() * 1000), jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: Math.floor(Math.random() * 1000), out: Math.floor(Math.random() * 1000), nov: Math.floor(Math.random() * 1000), dez: Math.floor(Math.random() * 1000) },
+                                                            { day: "31", jan: Math.floor(Math.random() * 1000), fev: "-", mar: Math.floor(Math.random() * 1000), abr: "-", mai: Math.floor(Math.random() * 1000), jun: "-", jul: Math.floor(Math.random() * 1000), ago: Math.floor(Math.random() * 1000), set: "-", out: Math.floor(Math.random() * 1000), nov: "-", dez: Math.floor(Math.random() * 1000) },
+                                                        ].map((item, index) => (
+                                                            <tr key={index}>
+                                                                <th className="border-0 py-2">{item.day}</th>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.jan) }}>{(item.jan !== "-") ? <strong>{item.jan} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.fev) }}>{(item.fev !== "-") ? <strong>{item.fev} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.mar) }}>{(item.mar !== "-") ? <strong>{item.mar} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.abr) }}>{(item.abr !== "-") ? <strong>{item.abr} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.mai) }}>{(item.mai !== "-") ? <strong>{item.mai} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.jun) }}>{(item.jun !== "-") ? <strong>{item.jun} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.jul) }}>{(item.jul !== "-") ? <strong>{item.jul} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.ago) }}>{(item.ago !== "-") ? <strong>{item.ago} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.set) }}>{(item.set !== "-") ? <strong>{item.set} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.out) }}>{(item.out !== "-") ? <strong>{item.out} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.nov) }}>{(item.nov !== "-") ? <strong>{item.nov} kWh</strong> : "-"}</td>
+                                                                <td className="small border-0 py-2" style={{ verticalAlign: "middle", background: this.generateColor(item.dez) }}>{(item.dez !== "-") ? <strong>{item.dez} kWh</strong> : "-"}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </>}
                                         </Table>
                                     </Col>
                                 </Row>

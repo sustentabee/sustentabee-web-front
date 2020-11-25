@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { decodeToken } from "../../config/auth";
 import Layout from "../../components/Layout";
 import Header from "../../components/Header";
@@ -11,6 +11,7 @@ import io from "socket.io-client";
 import { Link } from "react-router-dom";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import MaterialIcon from "material-icons-react";
 require('dotenv').config();
 
 export default class Home extends Component {
@@ -21,6 +22,8 @@ export default class Home extends Component {
         notifications: [],
         dataChart: [],
         dataChartPrice: [],
+        equipment: '',
+        show: false,
     };
 
     componentDidMount() {
@@ -41,8 +44,14 @@ export default class Home extends Component {
         this.createChart();
     };
 
-    createChart = () => {
-        const { measurements = [], month } = this.state;
+    createChart = (equipment = this.state.equipment,) => {
+        const { month } = this.state;
+        let { measurements = [] } = this.state;
+
+        if (equipment !== null && equipment !== "") {
+            measurements = measurements.filter(item => item.name === equipment)
+        }
+
         const dataChart = [], dataChartPrice = [];
         for (let i = 0; i < month.length; i++) {
             const items = measurements.filter(item => new Date(item.date).getMonth() === i && new Date(item.date).getFullYear() === new Date().getFullYear());
@@ -52,9 +61,11 @@ export default class Home extends Component {
             }
             const consumption = (((parseFloat(total) / items.length) * 720) / 1000);
             dataChart.push((isNaN(consumption)) ? 0 : parseInt(consumption));
-            dataChartPrice.push(consumption * 0.8);
+            const price = consumption * 0.8;
+            dataChartPrice.push((isNaN(price)) ? 0 : parseFloat(price));
         }
         this.setState({ dataChart, dataChartPrice });
+        console.log({ dataChart, dataChartPrice });
     }
 
     registerToSocket = async () => {
@@ -72,9 +83,16 @@ export default class Home extends Component {
         this.setState({ notifications: response.data });
     };
 
+    handleFilter = () => this.setState({ show: !this.state.show });
+
+    filterEquipment = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+        this.createChart(event.target.value)
+    }
+
     render() {
         const { user } = this.state.user;
-        const { equipments, notifications, month, dataChart, dataChartPrice } = this.state;
+        const { equipments, notifications, month, dataChart, dataChartPrice, equipment = '', show } = this.state;
 
         const options = {
             colors: ['#31b88a', '#333'],
@@ -129,8 +147,27 @@ export default class Home extends Component {
         return (
             <>
                 <Layout>
-                    <Header title={`Bem vindo, ${user.name}`} />
+                    <Header title={`Bem vindo, ${user.name}`}>
+                        <Button variant="muted" onClick={() => this.handleFilter()} className="bg-white" style={{ fontSize: "24px", lineHeight: 0 }}><MaterialIcon icon="filter_alt" /></Button>
+                    </Header>
                     <Container fluid>
+                        <Row className={(show) ? "d-flex mb-4" : "d-none mb-4"} >
+                            <Col xs={12} >
+                                <Form>
+                                    <Row className="justify-content-start">
+                                        <Col xs={12} lg={6}>
+                                            <Form.Label className="text-muted small">Equipamento</Form.Label>
+                                            <Form.Control as="select" name="equipment" value={equipment} onChange={this.filterEquipment.bind(this)} className="border-0 shadow-sm">
+                                                <option value="">Nenhum</option>
+                                                {equipments.map((item, index) => (
+                                                    <option value={item.name} key={index}>{item.name}</option>
+                                                ))}
+                                            </Form.Control>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            </Col>
+                        </Row>
                         <Row>
                             <Col xs={12} lg={6}>
                                 <Widget name={"Total de Equipamentos"} value={equipments.length} />

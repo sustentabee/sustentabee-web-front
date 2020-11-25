@@ -13,11 +13,6 @@ import api from "../../../config/api";
 export default class DashboardAlert extends Component {
 
     state = {
-        categories: [],
-        totalAlerts: [],
-        totalAlertsDanger: [],
-        totalAlertsWarning: [],
-        totalAlertsSuccess: [],
         startDate: '',
         endDate: '',
         brands: [],
@@ -25,6 +20,7 @@ export default class DashboardAlert extends Component {
         show: false,
         equipments: [],
         alerts: [],
+        data_chart: [],
     }
 
     componentDidMount() {
@@ -87,22 +83,31 @@ export default class DashboardAlert extends Component {
             })
         }
 
-
         for (let i = 0; i < equipments.length; i++) {
             arr.push({
                 name: equipments[i].name,
                 total: alerts.filter(alert => alert.equipment_id === equipments[i].id),
             })
         }
-        const totalAlerts = [], totalAlertsDanger = [], totalAlertsWarning = [], totalAlertsSuccess = [], categories = [];
+
+        const titles = [];
         for (let i = 0; i < arr.length; i++) {
-            categories.push(arr[i].name);
-            totalAlerts.push(arr[i].total.length);
-            totalAlertsDanger.push(arr[i].total.filter(item => item.type === "danger").length);
-            totalAlertsWarning.push(arr[i].total.filter(item => item.type === "warning").length);
-            totalAlertsSuccess.push(arr[i].total.filter(item => item.type === "success").length);
+            const { total } = arr[i];
+            for (let j = 0; j < total.length; j++) {
+                titles.push(total[j].title);
+            }
         }
-        this.setState({ totalAlerts, totalAlertsDanger, totalAlertsWarning, totalAlertsSuccess, categories })
+        const items = [...new Set(titles)];
+
+        const data_chart = [];
+        for (let i = 0; i < items.length; i++) {
+            let total = 0;
+            for (let j = 0; j < arr.length; j++) {
+                total += arr[j].total.filter(item => item.title === items[i]).length;
+            }
+            data_chart.push({ name: items[i], y: total })
+        }
+        this.setState({ data_chart });
     }
 
     filterDate = (event) => {
@@ -122,15 +127,12 @@ export default class DashboardAlert extends Component {
     }
 
     export = () => {
-        const { totalAlerts, totalAlertsDanger, totalAlertsWarning, totalAlertsSuccess, categories } = this.state;
+        const { data_chart } = this.state;
         const data = [];
-        for (let i = 0; i < categories.length; i++) {
+        for (let i = 0; i < data_chart.length; i++) {
             data.push({
-                equipamento: categories[i],
-                total: totalAlerts[i],
-                danger: totalAlertsDanger[i],
-                warning: totalAlertsWarning[i],
-                success: totalAlertsSuccess[i],
+                alerta: data_chart[i].name,
+                total: data_chart[i].y
             });
         }
         const options = {
@@ -139,7 +141,7 @@ export default class DashboardAlert extends Component {
             decimalSeparator: '.',
             showLabels: true,
             showTitle: true,
-            title: 'Total de alertas por equipamento',
+            title: 'Total de alertas',
             useTextFile: false,
             useBom: true,
             useKeysAsHeaders: true
@@ -151,55 +153,56 @@ export default class DashboardAlert extends Component {
     handleFilter = () => this.setState({ show: !this.state.show });
 
     render() {
-        const { categories, totalAlerts, totalAlertsDanger, totalAlertsWarning, totalAlertsSuccess, startDate, endDate, brand, brands, show } = this.state;
+        const { startDate, endDate, brand, brands, show, data_chart = [] } = this.state;
+
+        const pieColors = (function () {
+            let colors = [],
+                base = "#31b88a",
+                i;
+
+            for (i = 0; i < 10; i += 1) {
+                colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+            }
+            return colors;
+        }());
 
         const options = {
-            colors: ['#31b88a', "#A00", "rgb(255, 140, 0)", "#0A0"],
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
             credits: {
                 enabled: false
             },
-            chart: {
-                type: 'bar',
-                height: '50%'
-            },
             title: {
-                text: 'Total de alertas por equipamento'
+                text: ''
             },
-            xAxis: { categories: categories, crosshair: true },
-            yAxis: [{ className: 'highcharts-color-0', min: 0, allowDecimals: false, title: { text: '' } }],
             tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b> {point.y}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
+                pointFormat: '{series.name}: <b>{point.y}</b>'
             },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
+            accessibility: {
+                point: {
+                    valueSuffix: ''
                 }
             },
-            series: [
-                { name: "Total", data: totalAlerts },
-                { name: "Urgente", data: totalAlertsDanger },
-                { name: "Atenção", data: totalAlertsWarning },
-                { name: "Bom", data: totalAlertsSuccess },
-            ],
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        chart: {
-                            height: '800px'
-                        },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    colors: pieColors,
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.y}'
                     }
-                }]
-            }
+                }
+            },
+            series: [{
+                name: 'Total',
+                colorByPoint: true,
+                data: data_chart
+            }]
         }
 
         return (

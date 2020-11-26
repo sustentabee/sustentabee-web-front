@@ -29,6 +29,7 @@ export default class Sidebar extends Component {
                                 <SidebarNavLink link="/medicoes" icon="history" name="Medições" />
                                 <SidebarNavLink link="/equipamentos" icon="sensor_window" name="Equipamentos" />
                                 <SidebarNavLink link="/manutencoes" icon="handyman" name="Manutenções" />
+                                <SidebarNavLink link="/configuracoes" icon="settings" name="Configurações" />
                             </Accordion>
                         </div>
                     </div>

@@ -12,6 +12,7 @@ import DashboardAlert from "./pages/_dashboards/DashboardAlert";
 import DashboardMaintenance from "./pages/_dashboards/DashboardMaintenance";
 import DashboardMeasurement from "./pages/_dashboards/DashboardMeasurement";
 import MyCompany from "./pages/MyCompany";
+import Settings from "./pages/Settings";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
@@ -40,6 +41,7 @@ const Routes = () => (
             <PrivateRoute exact path="/dashboard-manutencao" component={DashboardMaintenance} />
             <PrivateRoute exact path="/dashboard-alerta" component={DashboardAlert} />
             <PrivateRoute exact path="/dashboard-medicao" component={DashboardMeasurement} />
+            <PrivateRoute exact path="/configuracoes" component={Settings} />
             <Route exact path="*" component={() => <h1>Page not found</h1>} />
         </Switch>
     </BrowserRouter>

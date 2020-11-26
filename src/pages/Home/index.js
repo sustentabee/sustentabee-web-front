@@ -65,7 +65,7 @@ export default class Home extends Component {
             dataChartPrice.push((isNaN(price)) ? 0 : parseFloat(price));
         }
         this.setState({ dataChart, dataChartPrice });
-        console.log({ dataChart, dataChartPrice });
+        
     }
 
     registerToSocket = async () => {

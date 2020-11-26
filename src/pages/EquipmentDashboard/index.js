@@ -23,6 +23,8 @@ export default class EquipmentDashboard extends Component {
         dataChart: [],
         dataChartPrice: [],
         m1: [], m2: [], m3: [], m4: [], m5: [], m6: [], m7: [], m8: [], m9: [], m10: [], m11: [], m12: [],
+        company_spectrum_arr: [],
+        rangeColors: [],
     }
 
     componentDidMount() {
@@ -36,6 +38,7 @@ export default class EquipmentDashboard extends Component {
         const response = await api.get(`/equipment/${id}`);
         this.setState({ equipment: response.data });
         this.getNotifications();
+        this.getCompanySpectrum();
     }
 
     getMeasurement = async () => {
@@ -112,25 +115,34 @@ export default class EquipmentDashboard extends Component {
     }
 
     generateColor = value => {
-        if (value === "-" || value === 0 || value === undefined) {
-            return "#fff";
-        } else if (value > 380) {
-            return "#ff0000"; // Vermelho
-        } else if (value > 360) {
-            return "#ff4c4c"; // Vermelho Claro
-        } else if (value > 320) {
-            return "#ffff00"; // Amarelo
-        } else if (value > 280) {
-            return "#ffffb2"; // Amarelo Claro
-        } else if (value > 240) {
-            return "#cce5cc"; // Verde Claro
-        } else {
-            return "#99cc99"; // Verde Medio
+        const { rangeColors = [] } = this.state;
+        for (let i = 0; i < rangeColors.length; i++) {
+            if (value <= 0) {
+                return "#fff";
+            }
+            else if (value <= rangeColors[i].value) {
+                return rangeColors[i].color;
+            }
         }
+        return "#fff";
     }
 
     randomIntFromInterval = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    getCompanySpectrum = async () => {
+        const { estimatedConsumption } = this.state.equipment;
+        const response = await api.get("/company-spectrum");
+        const company_spectrum_arr = response.data;
+        this.setState({ company_spectrum_arr });
+        const arr = [];
+        for (let i = 0; i < company_spectrum_arr.length; i++) {
+            let vp = estimatedConsumption * parseFloat((company_spectrum_arr[i].percent >= 100) ? company_spectrum_arr[i].percent / 100 : "0." + company_spectrum_arr[i].percent);
+            let total = (!isNaN(estimatedConsumption + vp)) ? estimatedConsumption + vp : 0;
+            arr.push({ value: total, color: company_spectrum_arr[i].color })
+        }
+        this.setState({ rangeColors: arr });
     }
 
     render() {

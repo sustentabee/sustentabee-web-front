@@ -10,7 +10,7 @@
         "bootstrap": "^4.4.1",
         "dotenv": "^8.2.0",
         "export-to-csv": "^0.2.1",
-        "highcharts": "^8.1.0",
+        "highcharts": "^9.0.0",
         "highcharts-react-official": "^3.0.0",
         "jwt-decode": "^3.0.0-beta.2",
         "material-icons-react": "^1.0.4",
